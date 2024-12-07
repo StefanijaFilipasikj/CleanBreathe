@@ -1,0 +1,21 @@
+name: clean_breathe
+description: Pollution App
+
+publish_to: 'none' # Remove this line if you plan to publish your app.
+
+environment:
+  sdk: ">=3.0.0 <4.0.0" # Adjust this according to your Flutter SDK version
+
+dependencies:
+  flutter:
+    sdk: flutter
+  geolocator: ^9.0.0
+  flutter_map: ^4.0.0
+  latlong2: ^0.8.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
