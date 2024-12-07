@@ -1,6 +1,13 @@
-# clean_breathe
+![logo]([https://finki.ukim.mk/sites/default/files/logo_10.png](https://cdn-icons-png.flaticon.com/512/9308/9308521.png))
 
-Air Pollution App inspired by Pulse.eco
+# CleanBREATHE
+
+Air Pollution App in Flutter inspired by Pulse.eco
+
+Created by
+Dejan Simonovski (211039)
+Stefanija Filipasikj (213215)
+Ivan Cekikj (211146)
 
 ## Getting Started
 
