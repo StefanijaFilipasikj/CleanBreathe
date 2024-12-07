@@ -1,5 +1,3 @@
-![logo](https://cdn-icons-png.flaticon.com/512/9308/9308521.png)
-
 # CleanBREATHE
 
 Air Pollution App in Flutter inspired by Pulse.eco
@@ -8,6 +6,8 @@ Created by
 Dejan Simonovski (211039)
 Stefanija Filipasikj (213215)
 Ivan Cekikj (211146)
+
+![logo](https://cdn-icons-png.flaticon.com/512/9308/9308521.png)
 
 ## Getting Started
 
