@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {
-  const NavBar({Key? key}) : super(key: key);
+  final String? cityName;
+
+  const NavBar({Key? key, this.cityName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,49 +12,61 @@ class NavBar extends StatelessWidget {
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            onTap: () {
-              // TODO: Handle city selection
-              showCitySelectionDialog(context);
-            },
-            child: Row(
-              children: const [
-                Text(
-                  "City",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+          Expanded(
+            flex: 1,
+            child: GestureDetector(
+              onTap: () {
+                // TODO: Handle city selection
+                showCitySelectionDialog(context);
+              },
+              child: Row(
+                children: [
+                  Text(
+                    cityName ?? "City",
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Icon(
-                  Icons.arrow_drop_down,
+                  const Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          Expanded(
+            flex: 1,
+            child: const Text(
+              "pulse.eco",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+
+          Expanded(
+            flex: 1,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: () {
+                  // TODO: Handle language selection
+                  showLanguageSelectionDialog(context);
+                },
+                child: const Icon(
+                  Icons.language,
                   color: Colors.black,
+                  size: 24,
                 ),
-              ],
-            ),
-          ),
-
-          const Text(
-            "pulse.eco",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          GestureDetector(
-            onTap: () {
-              // TODO: Handle language selection
-              showLanguageSelectionDialog(context);
-            },
-            child: const Icon(
-              Icons.language,
-              color: Colors.black,
-              size: 24,
+              ),
             ),
           ),
         ],
@@ -68,6 +82,9 @@ class NavBar extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           title: const Text("Select a City"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -99,6 +116,9 @@ class NavBar extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           title: const Text("Select Language"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

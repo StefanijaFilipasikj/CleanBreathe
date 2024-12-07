@@ -98,7 +98,7 @@ class MainScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const NavBar(),
+            // const NavBar(),
             Expanded(
               child: MapView(),
             ),

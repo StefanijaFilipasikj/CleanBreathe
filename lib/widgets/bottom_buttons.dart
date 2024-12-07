@@ -6,14 +6,14 @@ class BottomButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<IconData> icons = [
-      Icons.home,
-      Icons.settings,
-      Icons.add_box_outlined,
-      Icons.add_chart
+      Icons.map_outlined,
+      Icons.filter_alt_outlined,
+      Icons.add_circle_outline,
+      Icons.insert_chart_outlined
     ];
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.10,
+      height: MediaQuery.of(context).size.height * 0.11,
       color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -23,9 +23,10 @@ class BottomButtons extends StatelessWidget {
               // TODO Add action
             },
             style: ElevatedButton.styleFrom(
-              fixedSize: const Size(70, 70), // Square buttons
+              fixedSize: const Size(65, 65),
+              padding: EdgeInsets.zero,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10), // Rounded corners
+                borderRadius: BorderRadius.circular(10),
               ),
               backgroundColor: Colors.grey[200],
               elevation: 4,
@@ -33,7 +34,7 @@ class BottomButtons extends StatelessWidget {
             child: Icon(
               icon,
               color: Colors.black,
-              size: 30, // Icon size
+              size: 35,
             ),
           );
         }).toList(),
