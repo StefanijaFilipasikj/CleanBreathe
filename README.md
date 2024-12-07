@@ -1,4 +1,4 @@
-![logo]([https://finki.ukim.mk/sites/default/files/logo_10.png](https://cdn-icons-png.flaticon.com/512/9308/9308521.png))
+![logo]([https://finki.ukim.mk/sites/default/files/logo_10.png](https://cdn-icons-png.flaticon.com/512/9308/9308521.png)
 
 # CleanBREATHE
 
