@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'widgets/navbar.dart';
-import 'widgets/map_view.dart';
-import 'widgets/bottom_buttons.dart';
-import 'widgets/loading_screen.dart'; // Import the loading screen widget
+import 'features/common/navigation/view/widgets/navbar.dart';
+import 'features/map/view/pages/map_view.dart';
+import 'features/intro-loading/view/pages/loading_screen.dart'; // Import the loading screen widget
 
 void main() {
   runApp(const MyApp());

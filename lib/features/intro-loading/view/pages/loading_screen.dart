@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'navbar.dart';
-import 'map_view.dart';
-import 'bottom_buttons.dart';
+import '../../../common/navigation/view/widgets/bottom_buttons.dart';
+import '../../../common/navigation/view/widgets/navbar.dart';
+import '../../../map/view/pages/map_view.dart';
 
 void main() {
   runApp(const MyApp());

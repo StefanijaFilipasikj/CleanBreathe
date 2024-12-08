@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:clean_breathe/widgets/pollutants_heading.dart';
+import 'package:clean_breathe/features/map/view/widgets/pollutants_heading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
-import 'navbar.dart';
+import '../../../common/navigation/view/widgets/navbar.dart';
 import 'package:http/http.dart' as http;
 
 class MapView extends StatefulWidget {
