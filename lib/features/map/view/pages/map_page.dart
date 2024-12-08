@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'package:clean_breathe/features/map/view/widgets/center_position_button.dart';
+import 'package:clean_breathe/features/map/view/widgets/disclaimer_button.dart';
+import 'package:clean_breathe/features/map/view/widgets/disclaimer_dialog.dart';
+import 'package:clean_breathe/features/map/view/widgets/location_map.dart';
 import 'package:clean_breathe/features/map/view/widgets/pollutants_heading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -200,50 +204,7 @@ class _MapPageState extends State<MapPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Disclaimer',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'The data presented is crowdsourced. We do not guarantee its correctness. '
-                          'The third-party sensor data is stored as received from their service, while '
-                          'the pulse.eco devices depend on the correctness of the used sensors and the '
-                          'conditions in their nearest surroundings. Please refer to the FAQ for details.',
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: 5,
-                right: 5,
-                child: IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
+        return DisclaimerDialog();
       },
     );
   }
@@ -269,76 +230,9 @@ class _MapPageState extends State<MapPage> {
           ),
           Expanded(child: Stack(
             children: [
-              FlutterMap(
-                mapController: _mapController,
-                options: MapOptions(
-                  center: _currentLocation,
-                  zoom: 13.0,
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                    subdomains: ['a', 'b', 'c'],
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: _currentLocation!,
-                        builder: (ctx) => const Icon(
-                          Icons.location_on,
-                          color: Colors.black,
-                          size: 40.0,
-                        ),
-                      ),
-                      ..._sensorMarkers,
-                    ],
-                  ),
-                ],
-              ),
-              Positioned(
-                bottom: 55.0,
-                right: 10.0,
-                child: Container(
-                  width: 40.0,
-                  height: 40.0,
-                  child: FloatingActionButton(
-                    onPressed: _zoomToCurrentLocation,
-                    child: const Icon(
-                      Icons.my_location,
-                      color: Colors.black,
-                      size: 30.0,
-                    ),
-                    backgroundColor: Color.fromRGBO(255, 255, 255, 0.8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 10.0,
-                right: 10.0,
-                child: Container(
-                  width: 100.0,
-                  height: 35.0,
-                  child: TextButton(
-                    onPressed: _showDisclaimerDialog,
-                    style: TextButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(255, 255, 255, 0.8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      'Disclaimer',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              LocationMap(_mapController, _currentLocation, _sensorMarkers),
+              CenterPositionButton(_zoomToCurrentLocation),
+              DisclaimerButton(onPressed: _showDisclaimerDialog)
             ],
           ),
           )
