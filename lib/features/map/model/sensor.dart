@@ -4,6 +4,7 @@ class Sensor {
   final double value;
   final double latitude;
   final double longitude;
+  final DateTime timeStamp;
 
   Sensor({
     required this.sensorId,
@@ -11,6 +12,7 @@ class Sensor {
     required this.value,
     required this.latitude,
     required this.longitude,
+    required this.timeStamp
   });
 
   factory Sensor.fromJson(Map<String, dynamic> json) {
@@ -18,6 +20,7 @@ class Sensor {
     return Sensor(
       sensorId: json['sensorId'],
       type: json['type'],
+      timeStamp: DateTime.parse(json['stamp']),
       value: double.parse(json['value']),
       latitude: double.parse(position[0]),
       longitude: double.parse(position[1]),

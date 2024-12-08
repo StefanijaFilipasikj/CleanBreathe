@@ -5,7 +5,7 @@ import '../model/sensor.dart';
 
 class SensorRepository {
   Future<List<Sensor>> fetchSensors(String cityName) async {
-    final url = Uri.parse("https://$cityName.pulse.eco/rest/data24h");
+    final url = Uri.parse("https://$cityName.pulse.eco/rest/current");
 
     try {
       final response = await http.get(url);

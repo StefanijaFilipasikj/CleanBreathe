@@ -1,10 +1,17 @@
+import 'package:clean_breathe/features/map/repository/sensor_repository.dart';
+import 'package:clean_breathe/features/map/view-model/map_view_model.dart';
 import 'package:flutter/material.dart';
-import 'features/common/navigation/view/widgets/navbar.dart';
-import 'features/map/view/pages/map_page.dart';
-import 'features/intro-loading/view/pages/loading_screen.dart'; // Import the loading screen widget
+import 'features/intro-loading/view/pages/loading_screen.dart';
+import 'package:provider/provider.dart';
+
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => MapViewModel(SensorRepository())..init(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
