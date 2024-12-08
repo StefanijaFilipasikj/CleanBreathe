@@ -8,14 +8,14 @@ import 'package:latlong2/latlong.dart';
 import '../../../common/navigation/view/widgets/navbar.dart';
 import 'package:http/http.dart' as http;
 
-class MapView extends StatefulWidget {
-  const MapView({Key? key}) : super(key: key);
+class MapPage extends StatefulWidget {
+  const MapPage({Key? key}) : super(key: key);
 
   @override
-  State<MapView> createState() => _MapViewState();
+  State<MapPage> createState() => _MapPageState();
 }
 
-class _MapViewState extends State<MapView> {
+class _MapPageState extends State<MapPage> {
   LatLng? _currentLocation;
   String? _currentCity;
   bool _isLoading = true;

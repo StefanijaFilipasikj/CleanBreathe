@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../common/navigation/view/widgets/bottom_buttons.dart';
-import '../../../common/navigation/view/widgets/navbar.dart';
-import '../../../map/view/pages/map_view.dart';
+import '../../../map/view/pages/map_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -98,9 +97,8 @@ class MainScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // const NavBar(),
             Expanded(
-              child: MapView(),
+              child: MapPage(),
             ),
             const BottomButtons(),
           ],

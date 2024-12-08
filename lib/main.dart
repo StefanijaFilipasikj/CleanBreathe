@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'features/common/navigation/view/widgets/navbar.dart';
-import 'features/map/view/pages/map_view.dart';
+import 'features/map/view/pages/map_page.dart';
 import 'features/intro-loading/view/pages/loading_screen.dart'; // Import the loading screen widget
 
 void main() {
