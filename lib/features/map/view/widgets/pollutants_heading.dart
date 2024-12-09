@@ -16,7 +16,7 @@ class PollutantsHeading extends StatelessWidget {
 
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -33,7 +33,13 @@ class PollutantsHeading extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text(pollutant.toUpperCase()),
+                child: Text(
+                  pollutant.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             );
           }).toList(),

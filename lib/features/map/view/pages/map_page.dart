@@ -1,4 +1,5 @@
-import 'package:clean_breathe/features/map/view/widgets/center_position_button.dart';
+import 'package:clean_breathe/features/map/view/widgets/average_in_city.dart';
+import 'package:clean_breathe/features/map/view/widgets/locator_button.dart';
 import 'package:clean_breathe/features/map/view/widgets/disclaimer_button.dart';
 import 'package:clean_breathe/features/map/view/widgets/disclaimer_dialog.dart';
 import 'package:clean_breathe/features/map/view/widgets/location_map.dart';
@@ -9,6 +10,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import '../../../common/navigation/view/widgets/navbar.dart';
 import '../../view-model/map_view_model.dart';
+import '../widgets/dates_heading.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -58,9 +60,14 @@ class _MapPageState extends State<MapPage> {
                     selectedPollutant: viewModel.selectedPollutant,
                     onPollutantSelected: viewModel.changePollutant,
                   ),
+                  DatesHeading(
+                    selectedDate: viewModel.selectedDate,
+                    onDateSelected: viewModel.changeDate,
+                  ),
                   Expanded(child: Stack(
                     children: [
-                      LocationMap(_mapController, viewModel.currentLocation, viewModel.sensorMarkers),
+                      LocationMap(_mapController, viewModel.currentLocation, viewModel.sensorMarkers, viewModel.sensors),
+                      AverageInCityDisplay(viewModel.cityAverage(), viewModel.pollutantMeasure()),
                       CenterPositionButton(_zoomToCurrentLocation(viewModel.currentLocation)),
                       DisclaimerButton(onPressed: _showDisclaimerDialog)
                     ],

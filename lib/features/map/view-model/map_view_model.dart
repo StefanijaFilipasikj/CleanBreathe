@@ -1,3 +1,4 @@
+import 'package:clean_breathe/features/common/utils/get_color_for_value.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,6 +6,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import '../model/sensor.dart';
 import '../repository/sensor_repository.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:icon_decoration/icon_decoration.dart';
 
 class MapViewModel extends ChangeNotifier {
   final SensorRepository _sensorRepository;
@@ -14,6 +17,7 @@ class MapViewModel extends ChangeNotifier {
   bool _loadingSensors = false;
   List<Sensor> _sensors = [];
   String _selectedPollutant = "pm10"; // Default pollutant
+  String _selectedDate = DateTime.now().toString(); // Default date
 
   MapViewModel(this._sensorRepository);
 
@@ -22,17 +26,39 @@ class MapViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get loadingSensors => _loadingSensors;
   String get selectedPollutant => _selectedPollutant;
+  String get selectedDate => _selectedDate;
+  List<Sensor> get sensors => _sensors;
 
   List<Marker> get sensorMarkers => [
     ..._sensors.map((sensor) =>
-      Marker(
-        point: LatLng(sensor.latitude, sensor.longitude),
-        builder: (ctx) => Icon(
-          Icons.location_on,
-          color: getColorForValue(sensor.value),
-          size: 40.0,
-        ),
-      )
+        Marker(
+          point: LatLng(sensor.latitude, sensor.longitude),
+          builder: (ctx) => Stack(
+            alignment: Alignment.center,
+            children: [
+              DecoratedIcon(
+                icon: Icon(
+                  FontAwesomeIcons.locationPin, size: 50.0, color: GetColorForValue.get(sensor.value),
+                  shadows: [Shadow(color: Colors.black54, blurRadius: 10, offset: Offset(0, 0),),],
+                ),
+              ),
+              Positioned(
+                bottom: 0.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  child: Text(
+                    sensor.value.toInt().toString(),
+                    style: TextStyle(
+                      fontSize: 13.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
     )
   ];
 
@@ -80,21 +106,19 @@ class MapViewModel extends ChangeNotifier {
       if (placemarks.isNotEmpty) {
         _currentCity = placemarks[0].locality;
         notifyListeners();
-        await _fetchSensors(_currentCity!);
+        await _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
       }
     } catch (e) {
       debugPrint("Error fetching city name: $e");
     }
   }
 
-  Future<void> _fetchSensors(String cityName) async {
+  Future<void> _fetchSensors(String cityName, String pollutant, String date) async {
     _loadingSensors = true;
     notifyListeners();
 
     try {
-      _sensors = (await _sensorRepository.fetchSensors(cityName))
-        .where((sensor) => sensor.type == _selectedPollutant)
-        .toList();
+      _sensors = await _sensorRepository.fetchSensors(cityName, pollutant, date);
     } catch (e) {
       debugPrint("Error fetching sensors: $e");
     } finally {
@@ -106,23 +130,31 @@ class MapViewModel extends ChangeNotifier {
   void changePollutant(String pollutant) {
     _selectedPollutant = pollutant;
     if (_currentCity != null) {
-      _fetchSensors(_currentCity!);
+      _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
     }
     notifyListeners();
   }
 
-  Color getColorForValue(double value) {
-    //TODO make this dynamic, each pollutant has a different color scale
-    if(value < 20.0){
-      return Color.fromRGBO(37, 143, 48, 1); //dark green
-    }else if(value < 50.0){
-      return Color.fromRGBO(79, 191, 73, 1); //lighter green
-    }else if(value < 80.0){
-      return Color.fromRGBO(245, 202, 61, 1); //yellow-orange
-    }else if(value < 150.0){
-      return Color.fromRGBO(214, 66, 81, 1); //red-pink
-    }else{
-      return Color.fromRGBO(131, 29, 40, 1.0); //dark-red
+  void changeDate(String date) {
+    _selectedDate = date;
+    if (_currentCity != null) {
+      _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
     }
+    notifyListeners();
+  }
+
+  double cityAverage() {
+    if(_sensors.length == 0) return 0.0;
+    return _sensors.map((s) => s.value).reduce((a, b) => a + b) / _sensors.length;
+  }
+
+  String pollutantMeasure() {
+    return switch (_selectedPollutant) {
+      "noise" => "dBA",
+      "temperature" => "°C",
+      "humidity" => "%",
+      "pressure" => "hPa",
+      _ => "μg/m³",
+    };
   }
 }
