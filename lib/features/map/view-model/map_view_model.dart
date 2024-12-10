@@ -1,4 +1,5 @@
 import 'package:clean_breathe/features/common/utils/get_color_for_value.dart';
+import 'package:clean_breathe/features/common/utils/get_text_for_value.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -132,6 +133,8 @@ class MapViewModel extends ChangeNotifier {
     if (_currentCity != null) {
       _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
     }
+    GetColorForValue.valueType = pollutant;
+    GetTextForValue.valueType = pollutant;
     notifyListeners();
   }
 
