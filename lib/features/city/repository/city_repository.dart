@@ -11,7 +11,7 @@ class CityRepository {
       City('Tetovo', LatLng(42.0067, 20.9714), 'Macedonia', ''),
       City('Veles', LatLng(41.7156, 21.7750), 'Macedonia', ''),
       City('Kumanovo', LatLng(42.1322, 21.7144), 'Macedonia', ''),
-      City('Resen', LatLng(41.0369, 21.0033), 'Macedonia', ''),
+      City('Resen', LatLng(41.0903, 21.0133), 'Macedonia', ''),
       City('Magdeburg', LatLng(52.1203, 11.6276), 'Germany', ''),
     ];
 

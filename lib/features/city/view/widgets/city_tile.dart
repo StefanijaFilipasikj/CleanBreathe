@@ -30,7 +30,7 @@ class CityTile extends StatelessWidget {
       leading: IconButton(
         icon: Icon(
           isFavorite ? Icons.favorite : Icons.favorite_border,
-          color: isFavorite ? Colors.red : null,
+          color: isFavorite ? Colors.black : null,
         ),
         onPressed: onFavoriteToggle,
       ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:clean_breathe/features/city/view-model/city_view_model.dart';
+import 'package:clean_breathe/features/map/view-model/map_view_model.dart';
 
 class SearchCityPage extends StatefulWidget {
   const SearchCityPage({Key? key}) : super(key: key);
@@ -34,6 +35,7 @@ class _SearchCityPageState extends State<SearchCityPage> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<CityViewModel>(context);
+    final mapViewModel = Provider.of<MapViewModel>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -69,8 +71,9 @@ class _SearchCityPageState extends State<SearchCityPage> {
                 ...viewModel.searchResults.map((city) => ListTile(
                   title: Text(city.name),  // Display city name only
                   onTap: () {
-                    viewModel.selectCity(city);
-                    Navigator.pop(context);
+                    viewModel.selectCity(city); // Select the city in the city view model
+                    mapViewModel.updateCity(city.name, city.location); // Update the map
+                    Navigator.pop(context); // Close the search page
                   },
                 )),
               ],
