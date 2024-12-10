@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import '../../../common/navigation/view/widgets/bottom_buttons.dart';
 import '../../../common/navigation/view/widgets/navbar.dart';
 import '../../view-model/map_view_model.dart';
 import '../widgets/dates_heading.dart';
@@ -41,6 +42,21 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: _mainContent(),
+            ),
+            BottomButtons(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Consumer<MapViewModel> _mainContent() {
     return Consumer<MapViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.isLoading || viewModel.loadingSensors) {
