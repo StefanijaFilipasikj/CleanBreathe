@@ -102,7 +102,7 @@ class MapViewModel extends ChangeNotifier {
 
   Future<void> _getCityName(double latitude, double longitude) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude, localeIdentifier: "en");
       if (placemarks.isNotEmpty) {
         _currentCity = placemarks[0].locality;
         notifyListeners();
@@ -156,5 +156,12 @@ class MapViewModel extends ChangeNotifier {
       "pressure" => "hPa",
       _ => "μg/m³",
     };
+  }
+
+  void updateCity(String cityName, LatLng location) {
+    _currentCity = cityName;
+    _currentLocation = location;
+    _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
+    notifyListeners();
   }
 }

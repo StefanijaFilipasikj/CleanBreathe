@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../city/view/pages/city_selection_page.dart';
+
 class NavBar extends StatelessWidget {
   final String? cityName;
 
@@ -17,13 +19,17 @@ class NavBar extends StatelessWidget {
             flex: 1,
             child: GestureDetector(
               onTap: () {
-                // TODO: Handle city selection
-                showCitySelectionDialog(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CitySelectionPage(),
+                  ),
+                );
               },
               child: Row(
                 children: [
                   Text(
-                    cityName ?? "City",
+                    cityName!,
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 18,

@@ -36,7 +36,7 @@ class _AverageInCityDisplayState extends State<AverageInCityDisplay> {
                 boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 3, offset: Offset(0, 3)),],
               ),
               width: _isExpanded ? 390 : 140,
-              height: _isExpanded ? 115 : 75,
+              height: _isExpanded ? 115 : 80,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
