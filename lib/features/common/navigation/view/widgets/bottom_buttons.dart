@@ -1,15 +1,20 @@
+import 'package:clean_breathe/features/common/navigation/model/bottom_button_information.dart';
 import 'package:flutter/material.dart';
 
 class BottomButtons extends StatelessWidget {
-  const BottomButtons({Key? key}) : super(key: key);
+  VoidCallback _mapOptionsCallback;
+
+  BottomButtons([this._mapOptionsCallback=_defaultCallback]);
+
+  static void _defaultCallback() {}
 
   @override
   Widget build(BuildContext context) {
-    final List<IconData> icons = [
-      Icons.map_outlined,
-      Icons.filter_alt_outlined,
-      Icons.add_circle_outline,
-      Icons.insert_chart_outlined
+    final List<BottomButtonInformation> bottomButtonsInfo = [
+      BottomButtonInformation(Icons.map_outlined, _defaultCallback),
+      BottomButtonInformation(Icons.filter_alt_outlined, _mapOptionsCallback),
+      BottomButtonInformation(Icons.add_circle_outline, _defaultCallback),
+      BottomButtonInformation(Icons.insert_chart_outlined, _defaultCallback),
     ];
 
     return Container(
@@ -17,11 +22,9 @@ class BottomButtons extends StatelessWidget {
       color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: icons.map((icon) {
+        children: bottomButtonsInfo.map((buttonInfo) {
           return ElevatedButton(
-            onPressed: () {
-              // TODO Add action
-            },
+            onPressed: buttonInfo.onPressed,
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(65, 65),
               padding: EdgeInsets.zero,
@@ -32,7 +35,7 @@ class BottomButtons extends StatelessWidget {
               elevation: 4,
             ),
             child: Icon(
-              icon,
+              buttonInfo.image,
               color: Colors.black,
               size: 35,
             ),
