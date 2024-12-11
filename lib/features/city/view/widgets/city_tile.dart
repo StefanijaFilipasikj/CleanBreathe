@@ -1,6 +1,8 @@
 import 'package:clean_breathe/features/city/model/city.dart';
+import 'package:clean_breathe/features/common/average_display/widgets/average_in_city.dart';
+import 'package:clean_breathe/features/map/view-model/map_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:clean_breathe/features/map/view/widgets/average_in_city.dart'; // Import the widget
+import 'package:provider/provider.dart';
 
 class CityTile extends StatelessWidget {
   final City city;
@@ -9,7 +11,6 @@ class CityTile extends StatelessWidget {
   final VoidCallback onFavoriteToggle;
   final double cityAverage;
   final String pollutantMeasure;
-  final String airQualitySummary;
 
   const CityTile({
     Key? key,
@@ -19,11 +20,12 @@ class CityTile extends StatelessWidget {
     required this.onFavoriteToggle,
     required this.cityAverage,
     required this.pollutantMeasure,
-    required this.airQualitySummary,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final mapViewModel = Provider.of<MapViewModel>(context);
+
     return ListTile(
       contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       onTap: onTap,
@@ -35,10 +37,12 @@ class CityTile extends StatelessWidget {
         onPressed: onFavoriteToggle,
       ),
       title: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Left side content with city name, country, and summary
           Expanded(
-            flex: 3,
+            flex: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -53,17 +57,34 @@ class CityTile extends StatelessWidget {
                   city.country,
                   style: TextStyle(color: Colors.grey[700]),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  'Summary $airQualitySummary',
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
               ],
             ),
           ),
           Expanded(
             flex: 2,
-            child: AverageInCityDisplay(cityAverage, pollutantMeasure),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                FutureBuilder<String>(
+                  future: mapViewModel.averageForCity(city.name),
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('No data available');
+                    } else if (snapshot.hasData) {
+                      return AverageInCityDisplay(
+                        double.tryParse(snapshot.data!) ?? 0.0,
+                        pollutantMeasure,
+                        false
+                      );
+                    } else {
+                      return Text('No data available');
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),

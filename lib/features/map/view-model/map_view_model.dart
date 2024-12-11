@@ -10,10 +10,12 @@ import '../repository/sensor_repository.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 
+
 class MapViewModel extends ChangeNotifier {
   final SensorRepository _sensorRepository;
   LatLng? _currentLocation;
   String? _currentCity;
+  String? _currentCountry;
   bool _isLoading = true;
   bool _loadingSensors = false;
   List<Sensor> _sensors = [];
@@ -23,45 +25,60 @@ class MapViewModel extends ChangeNotifier {
   MapViewModel(this._sensorRepository);
 
   LatLng? get currentLocation => _currentLocation;
+
   String? get currentCity => _currentCity;
+
+  String? get currentCountry => _currentCountry;
+
   bool get isLoading => _isLoading;
+
   bool get loadingSensors => _loadingSensors;
+
   String get selectedPollutant => _selectedPollutant;
+
   String get selectedDate => _selectedDate;
+
   List<Sensor> get sensors => _sensors;
 
-  List<Marker> get sensorMarkers => [
-    ..._sensors.map((sensor) =>
-        Marker(
-          point: LatLng(sensor.latitude, sensor.longitude),
-          builder: (ctx) => Stack(
-            alignment: Alignment.center,
-            children: [
-              DecoratedIcon(
-                icon: Icon(
-                  FontAwesomeIcons.locationPin, size: 50.0, color: GetColorForValue.get(sensor.value),
-                  shadows: [Shadow(color: Colors.black54, blurRadius: 10, offset: Offset(0, 0),),],
-                ),
-              ),
-              Positioned(
-                bottom: 0.0,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 6.0),
-                  child: Text(
-                    sensor.value.toInt().toString(),
-                    style: TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+  List<Marker> get sensorMarkers =>
+      [
+        ..._sensors.map((sensor) =>
+            Marker(
+              point: LatLng(sensor.latitude, sensor.longitude),
+              builder: (ctx) =>
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      DecoratedIcon(
+                        icon: Icon(
+                          FontAwesomeIcons.locationPin, size: 50.0,
+                          color: GetColorForValue.get(sensor.value),
+                          shadows: [
+                            Shadow(color: Colors.black54,
+                              blurRadius: 10,
+                              offset: Offset(0, 0),),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0.0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 6.0),
+                          child: Text(
+                            sensor.value.toInt().toString(),
+                            style: TextStyle(
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-            ],
-          ),
+            )
         )
-    )
-  ];
+      ];
 
   void init() {
     _determinePosition();
@@ -103,9 +120,11 @@ class MapViewModel extends ChangeNotifier {
 
   Future<void> _getCityName(double latitude, double longitude) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude, localeIdentifier: "en");
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          latitude, longitude, localeIdentifier: "en");
       if (placemarks.isNotEmpty) {
         _currentCity = placemarks[0].locality;
+        _currentCountry = placemarks.first.country;
         notifyListeners();
         await _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
       }
@@ -114,12 +133,14 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> _fetchSensors(String cityName, String pollutant, String date) async {
+  Future<void> _fetchSensors(String cityName, String pollutant,
+      String date) async {
     _loadingSensors = true;
     notifyListeners();
 
     try {
-      _sensors = await _sensorRepository.fetchSensors(cityName, pollutant, date);
+      _sensors =
+      await _sensorRepository.fetchSensors(cityName, pollutant, date);
     } catch (e) {
       debugPrint("Error fetching sensors: $e");
     } finally {
@@ -147,8 +168,9 @@ class MapViewModel extends ChangeNotifier {
   }
 
   double cityAverage() {
-    if(_sensors.length == 0) return 0.0;
-    return _sensors.map((s) => s.value).reduce((a, b) => a + b) / _sensors.length;
+    if (_sensors.length == 0) return 0.0;
+    return _sensors.map((s) => s.value).reduce((a, b) => a + b) /
+        _sensors.length;
   }
 
   String pollutantMeasure() {
@@ -161,10 +183,24 @@ class MapViewModel extends ChangeNotifier {
     };
   }
 
-  void updateCity(String cityName, LatLng location) {
+  void updateCity(String cityName, LatLng location, String country) {
     _currentCity = cityName;
     _currentLocation = location;
+    _currentCountry = country;
     _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
     notifyListeners();
   }
+
+  Future<String> averageForCity(String cityName) async {
+    var _citySensors = await _sensorRepository.fetchSensors(cityName, _selectedPollutant, selectedDate.toString());
+
+    if (_citySensors.isEmpty) return "0";
+    var _cityAvg = _citySensors.map((s) => s.value).reduce((a, b) => a + b) /
+        _citySensors.length;
+
+    return _cityAvg.toString();
+  }
+
 }
+
+
