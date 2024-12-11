@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 class AverageInCityDisplay extends StatefulWidget {
   final double average;
   final String measure;
+  final bool shouldExpand;
 
-  const AverageInCityDisplay(this.average, this.measure, {Key? key}) : super(key: key);
+  const AverageInCityDisplay(this.average, this.measure, this.shouldExpand, {Key? key}) : super(key: key);
 
   @override
   _AverageInCityDisplayState createState() => _AverageInCityDisplayState();
@@ -24,7 +25,9 @@ class _AverageInCityDisplayState extends State<AverageInCityDisplay> {
           GestureDetector(
             onTap: () {
               setState(() {
-                _isExpanded = !_isExpanded;
+                if(widget.shouldExpand){
+                  _isExpanded = !_isExpanded;
+                  }
               });
             },
             child: AnimatedContainer(
@@ -36,7 +39,7 @@ class _AverageInCityDisplayState extends State<AverageInCityDisplay> {
                 boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 3, offset: Offset(0, 3)),],
               ),
               width: _isExpanded ? 390 : 140,
-              height: _isExpanded ? 115 : 80,
+              height: _isExpanded ? 120 : 80,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,6 +95,7 @@ class _AverageInCityDisplayState extends State<AverageInCityDisplay> {
               ),
             ),
           ),
+          if(widget.shouldExpand)
           Positioned(
             right: 5,
             top: 5,

@@ -6,36 +6,41 @@ import 'package:latlong2/latlong.dart';
 class CityViewModel extends ChangeNotifier {
   final CityRepository _cityRepository = CityRepository();
 
-  City _selectedCity = City('Skopje', LatLng(41.9981, 21.4254), 'Macedonia', '');
   List<City> _favorites = [];
   List<City> _history = [];
   List<City> _searchResults = [];
   bool _isLoading = false;
 
-  City get selectedCity => _selectedCity;
   List<City> get favorites => _favorites;
   List<City> get history => _history;
   List<City> get searchResults => _searchResults;
   bool get isLoading => _isLoading;
 
-  void selectCity(City city) {
-    _selectedCity = city;
-    _addToHistory(city);
-    notifyListeners();
-  }
-
   void addToFavorites(City city) {
-    if (!_favorites.contains(city)) {
+
+    bool cityExists = _favorites.any((favCity) =>
+    favCity.name == city.name &&
+        favCity.country == city.country &&
+        favCity.location.latitude == city.location.latitude &&
+        favCity.location.longitude == city.location.longitude);
+
+    if (!cityExists) {
       _favorites.add(city);
       notifyListeners();
+    } else {
+      removeFromFavorites(city);
     }
-    else{
+  }
+
+
+  void removeFromFavorites(City city) {
+    if (_favorites.contains(city)) {
       _favorites.remove(city);
       notifyListeners();
     }
   }
 
-  void _addToHistory(City city) {
+  void addToHistory(City city) {
     if (!_history.contains(city)) {
       _history.add(city);
       notifyListeners();

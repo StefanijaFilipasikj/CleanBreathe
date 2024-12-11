@@ -1,4 +1,4 @@
-import 'package:clean_breathe/features/map/view/widgets/average_in_city.dart';
+import 'package:clean_breathe/features/common/average_display/widgets/average_in_city.dart';
 import 'package:clean_breathe/features/map/view/widgets/locator_button.dart';
 import 'package:clean_breathe/features/map/view/widgets/disclaimer_button.dart';
 import 'package:clean_breathe/features/map/view/widgets/disclaimer_dialog.dart';
@@ -67,7 +67,7 @@ class _MapPageState extends State<MapPage> {
                   Expanded(child: Stack(
                     children: [
                       LocationMap(_mapController, viewModel.currentLocation, viewModel.sensorMarkers, viewModel.sensors),
-                      AverageInCityDisplay(viewModel.cityAverage(), viewModel.pollutantMeasure()),
+                      AverageInCityDisplay(viewModel.cityAverage(), viewModel.pollutantMeasure(), true),
                       CenterPositionButton(_zoomToCurrentLocation(viewModel.currentLocation)),
                       DisclaimerButton(onPressed: _showDisclaimerDialog)
                     ],
