@@ -1,9 +1,11 @@
-import 'package:clean_breathe/features/common/average_display/widgets/average_in_city.dart';
+import 'package:clean_breathe/features/common/average_display/view/widgets/average_in_city.dart';
+import 'package:clean_breathe/features/map/view-model/toggling_view_model.dart';
 import 'package:clean_breathe/features/map/view/widgets/locator_button.dart';
 import 'package:clean_breathe/features/map/view/widgets/disclaimer_button.dart';
 import 'package:clean_breathe/features/map/view/widgets/disclaimer_dialog.dart';
 import 'package:clean_breathe/features/map/view/widgets/location_map.dart';
 import 'package:clean_breathe/features/map/view/widgets/pollutants_heading.dart';
+import 'package:clean_breathe/features/map/view/widgets/pollutants_history_toggler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -47,7 +49,7 @@ class _MapPageState extends State<MapPage> {
         child: Column(
           children: [
             Expanded(
-              child: _mainContent(),
+              child: _mainContent(context),
             ),
             BottomButtons(),
           ],
@@ -56,43 +58,48 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  Consumer<MapViewModel> _mainContent() {
-    return Consumer<MapViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.isLoading || viewModel.loadingSensors) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+  Widget _mainContent(BuildContext context) {
+    final mapViewModel = Provider.of<MapViewModel>(context);
+    final togglingViewModel = Provider.of<TogglingViewModel>(context);
 
-          return Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(kToolbarHeight),
-                child: NavBar(cityName: viewModel.currentCity),
+    if (mapViewModel.isLoading || mapViewModel.loadingSensors) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: NavBar(cityName: mapViewModel.currentCity),
+        ),
+        body: Column(
+          children: [
+            PollutantsHistoryToggler(
+                togglingViewModel.toggle,
+                togglingViewModel.isExpanded
+            ),
+            if (togglingViewModel.isExpanded) ...[
+              PollutantsHeading(
+                selectedPollutant: mapViewModel.selectedPollutant,
+                onPollutantSelected: mapViewModel.changePollutant,
               ),
-              body: Column(
-                children: [
-                  PollutantsHeading(
-                    selectedPollutant: viewModel.selectedPollutant,
-                    onPollutantSelected: viewModel.changePollutant,
-                  ),
-                  DatesHeading(
-                    selectedDate: viewModel.selectedDate,
-                    onDateSelected: viewModel.changeDate,
-                  ),
-                  Expanded(child: Stack(
-                    children: [
-                      LocationMap(_mapController, viewModel.currentLocation, viewModel.sensorMarkers, viewModel.sensors),
-                      AverageInCityDisplay(viewModel.cityAverage(), viewModel.pollutantMeasure(), true),
-                      CenterPositionButton(_zoomToCurrentLocation(viewModel.currentLocation)),
-                      DisclaimerButton(onPressed: _showDisclaimerDialog)
-                    ],
-                  ),
-                  )
-                ],
-              )
-          );
-        }
+              DatesHeading(
+                selectedDate: mapViewModel.selectedDate,
+                onDateSelected: mapViewModel.changeDate,
+              ),
+            ],
+            Expanded(child: Stack(
+              children: [
+                LocationMap(_mapController, mapViewModel.currentLocation, mapViewModel.sensorMarkers, mapViewModel.sensors),
+                AverageInCityDisplay(mapViewModel.cityAverage(), mapViewModel.pollutantMeasure(), true),
+                CenterPositionButton(_zoomToCurrentLocation(mapViewModel.currentLocation)),
+                DisclaimerButton(onPressed: _showDisclaimerDialog)
+              ],
+            ),
+            )
+          ],
+        )
     );
   }
 }

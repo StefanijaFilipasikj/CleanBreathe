@@ -1,5 +1,5 @@
 import 'package:clean_breathe/features/city/model/city.dart';
-import 'package:clean_breathe/features/common/average_display/widgets/average_in_city.dart';
+import 'package:clean_breathe/features/common/average_display/view/widgets/average_in_city.dart';
 import 'package:clean_breathe/features/map/view-model/map_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

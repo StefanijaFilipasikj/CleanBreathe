@@ -1,5 +1,6 @@
 import 'package:clean_breathe/features/map/repository/sensor_repository.dart';
 import 'package:clean_breathe/features/map/view-model/map_view_model.dart';
+import 'package:clean_breathe/features/map/view-model/toggling_view_model.dart';
 import 'package:flutter/material.dart';
 import 'features/city/view-model/city_view_model.dart';
 import 'features/intro-loading/view/pages/loading_screen.dart';
@@ -15,6 +16,9 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => CityViewModel(),
+        ),
+        ChangeNotifierProvider(
+            create: (_) => TogglingViewModel()
         ),
       ],
       child: const MyApp(),
