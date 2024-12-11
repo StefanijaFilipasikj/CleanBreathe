@@ -69,11 +69,11 @@ class _SearchCityPageState extends State<SearchCityPage> {
             child: ListView(
               children: [
                 ...viewModel.searchResults.map((city) => ListTile(
-                  title: Text(city.name),  // Display city name only
+                  title: Text(city.name),
                   onTap: () {
-                    viewModel.selectCity(city); // Select the city in the city view model
-                    mapViewModel.updateCity(city.name, city.location); // Update the map
-                    Navigator.pop(context); // Close the search page
+                    viewModel.addToHistory(city);
+                    mapViewModel.updateCity(city.name, city.location, city.country);
+                    Navigator.pop(context);
                   },
                 )),
               ],
