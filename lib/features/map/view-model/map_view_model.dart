@@ -100,7 +100,8 @@ class MapViewModel extends ChangeNotifier {
 
   Future<void> _fetchSensorsForSavedCity() async {
     if (_currentCity != null) {
-      await _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
+      var _cityNameTrim = _currentCity!.replaceAll(RegExp(r"\s+"), "");
+      await _fetchSensors(_cityNameTrim, _selectedPollutant, _selectedDate);
     }
   }
 
@@ -157,7 +158,8 @@ class MapViewModel extends ChangeNotifier {
         _currentCountry = placemarks.first.country;
         notifyListeners();
         Values.city = _currentCity!;
-        await _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
+        var _cityNameTrim = _currentCity!.replaceAll(RegExp(r"\s+"), "");
+        await _fetchSensors(_cityNameTrim, _selectedPollutant, _selectedDate);
 
         // Save city to SharedPreferences
         await _saveCity(_currentCity!, _currentCountry!, _currentLocation!);
@@ -174,7 +176,8 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _sensors = await _sensorRepository.fetchSensors(cityName, pollutant, date);
+      var _cityNameTrim = _currentCity!.replaceAll(RegExp(r"\s+"), "");
+      _sensors = await _sensorRepository.fetchSensors(_cityNameTrim, pollutant, date);
     } catch (e) {
       debugPrint("Error fetching sensors: $e");
     } finally {
@@ -187,7 +190,8 @@ class MapViewModel extends ChangeNotifier {
   void changePollutant(String pollutant) {
     _selectedPollutant = pollutant;
     if (_currentCity != null) {
-      _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
+      var _cityNameTrim = _currentCity!.replaceAll(RegExp(r"\s+"), "");
+      _fetchSensors(_cityNameTrim, _selectedPollutant, _selectedDate);
     }
     Values.valueType = pollutant;
     notifyListeners();
@@ -196,7 +200,8 @@ class MapViewModel extends ChangeNotifier {
   void changeDate(String date) {
     _selectedDate = date;
     if (_currentCity != null) {
-      _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
+      var _cityNameTrim = _currentCity!.replaceAll(RegExp(r"\s+"), "");
+      _fetchSensors(_cityNameTrim, _selectedPollutant, _selectedDate);
     }
     notifyListeners();
   }
@@ -222,7 +227,8 @@ class MapViewModel extends ChangeNotifier {
     _currentCity = cityName;
     _currentLocation = location;
     _currentCountry = country;
-    _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
+    var _cityNameTrim = _currentCity!.replaceAll(RegExp(r"\s+"), "");
+    _fetchSensors(_cityNameTrim, _selectedPollutant, _selectedDate);
 
 
     _saveCity(_currentCity!, _currentCountry!, _currentLocation!);
@@ -232,7 +238,8 @@ class MapViewModel extends ChangeNotifier {
   }
 
   Future<String> averageForCity(String cityName) async {
-    var _citySensors = await _sensorRepository.fetchSensors(cityName, _selectedPollutant, selectedDate.toString());
+    var _cityNameTrim = cityName.replaceAll(RegExp(r"\s+"), "");
+    var _citySensors = await _sensorRepository.fetchSensors(_cityNameTrim, _selectedPollutant, selectedDate.toString());
 
     if (_citySensors.isEmpty) return "0";
     var _cityAvg = _citySensors.map((s) => s.value).reduce((a, b) => a + b) / _citySensors.length;
