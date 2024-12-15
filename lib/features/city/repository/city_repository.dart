@@ -13,7 +13,7 @@ class CityRepository {
       City('Resen', LatLng(41.0903, 21.0133), 'North Macedonia'),
       City('Novo Selo', LatLng(41.4144, 22.8811), 'North Macedonia'),
       City('Struga', LatLng(41.1780, 20.6769), 'North Macedonia'),
-      City('Star Dojran', LatLng(41.1975, 22.5803), 'North Macedonia'),
+      City('Star Dojran', LatLng(41.1865, 22.7203), 'North Macedonia'),
       City('Shtip', LatLng(41.7458, 22.1958), 'North Macedonia'),
       City('Gostivar', LatLng(41.7970, 20.9082), 'North Macedonia'),
       City('Strumica', LatLng(41.4378, 22.6431), 'North Macedonia'),
@@ -25,6 +25,7 @@ class CityRepository {
 
       City('Sofia', LatLng(42.6977, 23.3219), 'Bulgaria'),
       City('Yambol', LatLng(42.4848, 26.5037), 'Bulgaria'),
+
       City('Zagreb', LatLng(45.8150, 15.9819), 'Croatia'),
 
       City('Nicosia', LatLng(35.1856, 33.3823), 'Cyprus'),

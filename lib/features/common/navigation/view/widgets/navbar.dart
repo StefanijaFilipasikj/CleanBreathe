@@ -28,17 +28,33 @@ class NavBar extends StatelessWidget {
               },
               child: Row(
                 children: [
-                  Text(
-                    cityName!,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                cityName ?? '',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                            const Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                          ],
+                        );
+                      },
                     ),
-                  ),
-                  const Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black,
                   ),
                 ],
               ),
@@ -77,41 +93,6 @@ class NavBar extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-
-  //TODO Make this dynamic
-  void showCitySelectionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Select a City"),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: const Text("Skopje"),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  // TODO: Set city to Skopje
-                },
-              ),
-              ListTile(
-                title: const Text("Bitola"),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  // TODO: Set city to Bitola
-                },
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 
