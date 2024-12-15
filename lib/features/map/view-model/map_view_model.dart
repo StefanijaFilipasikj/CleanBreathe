@@ -5,11 +5,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../model/sensor.dart';
 import '../repository/sensor_repository.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:icon_decoration/icon_decoration.dart';
-
 
 class MapViewModel extends ChangeNotifier {
   final SensorRepository _sensorRepository;
@@ -25,19 +25,12 @@ class MapViewModel extends ChangeNotifier {
   MapViewModel(this._sensorRepository);
 
   LatLng? get currentLocation => _currentLocation;
-
   String? get currentCity => _currentCity;
-
   String? get currentCountry => _currentCountry;
-
   bool get isLoading => _isLoading;
-
   bool get loadingSensors => _loadingSensors;
-
   String get selectedPollutant => _selectedPollutant;
-
   String get selectedDate => _selectedDate;
-
   List<Sensor> get sensors => _sensors;
 
   List<Marker> get sensorMarkers =>
@@ -81,7 +74,43 @@ class MapViewModel extends ChangeNotifier {
       ];
 
   void init() {
-    _determinePosition();
+    _loadSavedCity();
+  }
+
+  Future<void> _loadSavedCity() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String? savedCity = prefs.getString('currentCity');
+    if (savedCity != null) {
+      _currentCity = savedCity;
+      _currentCountry = prefs.getString('currentCountry');
+      String? lat = prefs.getString('currentLatitude');
+      String? lon = prefs.getString('currentLongitude');
+      if (lat != null && lon != null) {
+        _currentLocation = LatLng(double.parse(lat), double.parse(lon));
+      }
+      _isLoading = false; // Ensure loading is complete
+      notifyListeners();
+
+      await _fetchSensorsForSavedCity();
+    } else {
+      _determinePosition();
+    }
+  }
+
+  Future<void> _fetchSensorsForSavedCity() async {
+    if (_currentCity != null) {
+      await _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
+    }
+  }
+
+  Future<void> _saveCity(String cityName, String country, LatLng location) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('currentCity', cityName);
+    await prefs.setString('currentCountry', country);
+    await prefs.setString('currentLatitude', location.latitude.toString());
+    await prefs.setString('currentLongitude', location.longitude.toString());
   }
 
   Future<void> _determinePosition() async {
@@ -115,6 +144,7 @@ class MapViewModel extends ChangeNotifier {
     } catch (e) {
       _isLoading = false;
       notifyListeners();
+      debugPrint("Error determining position: $e");
     }
   }
 
@@ -128,24 +158,28 @@ class MapViewModel extends ChangeNotifier {
         notifyListeners();
         Values.city = _currentCity!;
         await _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
+
+        // Save city to SharedPreferences
+        await _saveCity(_currentCity!, _currentCountry!, _currentLocation!);
       }
     } catch (e) {
       debugPrint("Error fetching city name: $e");
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
-  Future<void> _fetchSensors(String cityName, String pollutant,
-      String date) async {
+  Future<void> _fetchSensors(String cityName, String pollutant, String date) async {
     _loadingSensors = true;
     notifyListeners();
 
     try {
-      _sensors =
-      await _sensorRepository.fetchSensors(cityName, pollutant, date);
+      _sensors = await _sensorRepository.fetchSensors(cityName, pollutant, date);
     } catch (e) {
       debugPrint("Error fetching sensors: $e");
     } finally {
       _loadingSensors = false;
+      _isLoading = false;
       notifyListeners();
     }
   }
@@ -189,6 +223,10 @@ class MapViewModel extends ChangeNotifier {
     _currentLocation = location;
     _currentCountry = country;
     _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
+
+
+    _saveCity(_currentCity!, _currentCountry!, _currentLocation!);
+
     Values.city = cityName;
     notifyListeners();
   }
@@ -197,13 +235,9 @@ class MapViewModel extends ChangeNotifier {
     var _citySensors = await _sensorRepository.fetchSensors(cityName, _selectedPollutant, selectedDate.toString());
 
     if (_citySensors.isEmpty) return "0";
-    var _cityAvg = _citySensors.map((s) => s.value).reduce((a, b) => a + b) /
-        _citySensors.length;
+    var _cityAvg = _citySensors.map((s) => s.value).reduce((a, b) => a + b) / _citySensors.length;
 
     Values.average = _cityAvg;
     return _cityAvg.toString();
   }
-
 }
-
-
