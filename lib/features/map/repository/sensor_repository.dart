@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import '../model/sensor.dart';
+import '../../common/utils/values.dart';
 
 class SensorRepository {
   Future<List<Sensor>> fetchSensors(String cityName, String valueType, String dateString) async {
@@ -70,5 +70,30 @@ class SensorRepository {
         'average': values.reduce((a, b) => a + b) / values.length,
       },
     ));
+  }
+
+  Future<double> getAverageForDate(DateTime date) async {
+    String cityName = Values.city;
+    String valueType = Values.valueType;
+
+    final String from = "${date.toIso8601String().split('T')[0]}T00:00:00%2b01:00";
+    String to = "${date.toIso8601String().split('T')[0]}T23:59:59%2b01:00";
+
+    final url = Uri.parse("https://$cityName.pulse.eco/rest/dataRaw?type=$valueType&from=$from&to=$to");
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        if(data.isEmpty){
+          return -10000.0;
+        }
+        return data.map((sensor) => double.parse(sensor['value'])).reduce((a, b) => a + b) / data.length;
+      } else {
+        throw Exception("Failed to load sensors");
+      }
+    } catch (e) {
+      throw Exception("Error fetching sensors: $e");
+    }
   }
 }
