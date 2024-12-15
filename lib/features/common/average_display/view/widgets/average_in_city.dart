@@ -1,5 +1,5 @@
-import 'package:clean_breathe/features/common/utils/get_color_for_value.dart';
-import 'package:clean_breathe/features/common/utils/get_text_for_value.dart';
+import 'package:clean_breathe/features/common/static_info/colors_by_value.dart';
+import 'package:clean_breathe/features/common/static_info/texts_by_average.dart';
 import 'package:flutter/material.dart';
 
 class AverageInCityDisplay extends StatefulWidget {
@@ -34,7 +34,7 @@ class _AverageInCityDisplayState extends State<AverageInCityDisplay> {
               duration: const Duration(milliseconds: 0),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: GetColorForValue.get(widget.average),
+                color: ColorByValue.get(widget.average),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 3, offset: Offset(0, 3)),],
               ),
@@ -82,7 +82,7 @@ class _AverageInCityDisplayState extends State<AverageInCityDisplay> {
                     const SizedBox(width: 14),
                     Expanded(
                       child: Text(
-                        GetTextForValue.get(widget.average),
+                        TextByAvgValue.get(),
                         textAlign: TextAlign.start,
                         style: const TextStyle(
                           fontSize: 13,

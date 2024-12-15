@@ -12,7 +12,7 @@ class PollutantsHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pollutants = ["pm10", "pm25", "temperature", "humidity", "pressure"];
+    final pollutants = ["pm10", "pm25", "temperature", "humidity", "pressure", "noise"];
 
     return Container(
       color: Colors.white,

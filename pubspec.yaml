@@ -19,6 +19,7 @@ dependencies:
   icon_decoration: ^2.1.0
   flutter_map_marker_cluster: any
   shared_preferences: ^2.0.15
+  fl_chart: 0.69.2
 
 dev_dependencies:
   flutter_test:

@@ -1,11 +1,9 @@
-import 'package:clean_breathe/features/common/utils/get_color_for_value.dart';
+import 'package:clean_breathe/features/common/static_info/colors_by_value.dart';
 import 'package:clean_breathe/features/map/model/sensor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:icon_decoration/icon_decoration.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 
 class LocationMap extends StatelessWidget {
@@ -47,7 +45,7 @@ class LocationMap extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                   boxShadow: [BoxShadow(color: Colors.black54, offset: Offset(0, 0), blurRadius: 6.0,),],
                   border: Border.all(color: Colors.black54, width: 1.0),
-                  color: GetColorForValue.get(averageValue),
+                  color: ColorByValue.get(averageValue),
                 ),
                 child: Center(
                   child: Text(
@@ -59,21 +57,6 @@ class LocationMap extends StatelessWidget {
             },
           ),
         ),
-        // MarkerLayer(
-        //   markers: [
-        //     Marker(
-        //       point: _currentLocation!,
-        //       builder: (ctx) => const DecoratedIcon(
-        //         icon: Icon(
-        //           FontAwesomeIcons.locationPin,
-        //           size: 50.0,
-        //           color: Colors.black,
-        //           shadows: [Shadow(color: Colors.black54, blurRadius: 10, offset: Offset(0, 0))],
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
       ],
     );
   }

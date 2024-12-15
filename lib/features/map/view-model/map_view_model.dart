@@ -1,5 +1,5 @@
-import 'package:clean_breathe/features/common/utils/get_color_for_value.dart';
-import 'package:clean_breathe/features/common/utils/get_text_for_value.dart';
+import 'package:clean_breathe/features/common/static_info/colors_by_value.dart';
+import 'package:clean_breathe/features/common/utils/values.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -45,7 +45,7 @@ class MapViewModel extends ChangeNotifier {
                       DecoratedIcon(
                         icon: Icon(
                           FontAwesomeIcons.locationPin, size: 50.0,
-                          color: GetColorForValue.get(sensor.value),
+                          color: ColorByValue.get(sensor.value),
                           shadows: [
                             Shadow(color: Colors.black54,
                               blurRadius: 10,
@@ -156,6 +156,7 @@ class MapViewModel extends ChangeNotifier {
         _currentCity = placemarks[0].locality;
         _currentCountry = placemarks.first.country;
         notifyListeners();
+        Values.city = _currentCity!;
         await _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
 
         // Save city to SharedPreferences
@@ -188,8 +189,7 @@ class MapViewModel extends ChangeNotifier {
     if (_currentCity != null) {
       _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
     }
-    GetColorForValue.valueType = pollutant;
-    GetTextForValue.valueType = pollutant;
+    Values.valueType = pollutant;
     notifyListeners();
   }
 
@@ -202,8 +202,10 @@ class MapViewModel extends ChangeNotifier {
   }
 
   double cityAverage() {
-    if (_sensors.isEmpty) return 0.0;
-    return _sensors.map((s) => s.value).reduce((a, b) => a + b) / _sensors.length;
+    if (_sensors.length == 0) return 0.0;
+    double avg = _sensors.map((s) => s.value).reduce((a, b) => a + b) / _sensors.length;
+    Values.average = avg;
+    return avg;
   }
 
   String pollutantMeasure() {
@@ -222,8 +224,10 @@ class MapViewModel extends ChangeNotifier {
     _currentCountry = country;
     _fetchSensors(_currentCity!, _selectedPollutant, _selectedDate);
 
+
     _saveCity(_currentCity!, _currentCountry!, _currentLocation!);
 
+    Values.city = cityName;
     notifyListeners();
   }
 
@@ -233,6 +237,7 @@ class MapViewModel extends ChangeNotifier {
     if (_citySensors.isEmpty) return "0";
     var _cityAvg = _citySensors.map((s) => s.value).reduce((a, b) => a + b) / _citySensors.length;
 
+    Values.average = _cityAvg;
     return _cityAvg.toString();
   }
 }
