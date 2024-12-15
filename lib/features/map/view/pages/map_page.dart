@@ -14,6 +14,7 @@ import '../../../common/navigation/view/widgets/bottom_buttons.dart';
 import '../../../common/navigation/view/widgets/navbar.dart';
 import '../../view-model/map_view_model.dart';
 import '../widgets/dates_heading.dart';
+import '../widgets/advanced_overlay.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   final MapController _mapController = MapController();
+  bool _showAdvancedInformation = false;
 
   VoidCallback _zoomToCurrentLocation(LatLng? currentLocation) {
     return () => {
@@ -42,18 +44,37 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
+  void _toggleAdvancedInformation() {
+    setState(() {
+      _showAdvancedInformation = !_showAdvancedInformation;
+    });
+  }
+
+  void _defaultCallback() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: _mainContent(context),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              Expanded(
+                child: _mainContent(context),
+              ),
+              BottomButtons(
+                  _defaultCallback,             // TODO: Map callback
+                  _defaultCallback,             // TODO: Devices callback
+                  _toggleAdvancedInformation,   // Advanced information callback
+                  _defaultCallback              // TODO: Rankings callback
+              ),
+            ],
+          ),
+          if (_showAdvancedInformation)
+            AdvancedOverlayWidget(
+              toggleAdvancedInformation: _toggleAdvancedInformation,
             ),
-            BottomButtons(),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -89,14 +110,15 @@ class _MapPageState extends State<MapPage> {
                 onDateSelected: mapViewModel.changeDate,
               ),
             ],
-            Expanded(child: Stack(
-              children: [
-                LocationMap(_mapController, mapViewModel.currentLocation, mapViewModel.sensorMarkers, mapViewModel.sensors),
-                AverageInCityDisplay(mapViewModel.cityAverage(), mapViewModel.pollutantMeasure(), true),
-                CenterPositionButton(_zoomToCurrentLocation(mapViewModel.currentLocation)),
-                DisclaimerButton(onPressed: _showDisclaimerDialog)
-              ],
-            ),
+            Expanded(
+              child: Stack(
+                children: [
+                  LocationMap(_mapController, mapViewModel.currentLocation, mapViewModel.sensorMarkers, mapViewModel.sensors),
+                  AverageInCityDisplay(mapViewModel.cityAverage(), mapViewModel.pollutantMeasure(), true),
+                  CenterPositionButton(_zoomToCurrentLocation(mapViewModel.currentLocation)),
+                  DisclaimerButton(onPressed: _showDisclaimerDialog)
+                ],
+              ),
             )
           ],
         )

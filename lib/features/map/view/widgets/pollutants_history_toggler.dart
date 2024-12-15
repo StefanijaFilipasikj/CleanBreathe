@@ -12,8 +12,8 @@ class PollutantsHistoryToggler extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          color: Colors.white, // Set white background
-          //padding: EdgeInsets.all(8.0),
+          color: Colors.white,
+          padding: EdgeInsets.all(2.0),
           child:
             GestureDetector(
               onTap: _onTap,
@@ -24,7 +24,7 @@ class PollutantsHistoryToggler extends StatelessWidget {
                     _areOptionsActive
                         ? Icons.keyboard_arrow_up
                         : Icons.keyboard_arrow_down,
-                    size: 32,
+                    size: 30,
                   ),
                 ],
               ),
