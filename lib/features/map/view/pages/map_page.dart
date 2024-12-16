@@ -113,7 +113,7 @@ class _MapPageState extends State<MapPage> {
             Expanded(
               child: Stack(
                 children: [
-                  LocationMap(_mapController, mapViewModel.currentLocation, mapViewModel.sensorMarkers, mapViewModel.sensors),
+                  LocationMap(_mapController, mapViewModel.currentLocation, mapViewModel.sensors),
                   AverageInCityDisplay(mapViewModel.cityAverage(), mapViewModel.pollutantMeasure(), true),
                   CenterPositionButton(_zoomToCurrentLocation(mapViewModel.currentLocation)),
                   DisclaimerButton(onPressed: _showDisclaimerDialog)

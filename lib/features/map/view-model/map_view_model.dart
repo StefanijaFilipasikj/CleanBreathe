@@ -33,46 +33,6 @@ class MapViewModel extends ChangeNotifier {
   String get selectedDate => _selectedDate;
   List<Sensor> get sensors => _sensors;
 
-  List<Marker> get sensorMarkers =>
-      [
-        ..._sensors.map((sensor) =>
-            Marker(
-              point: LatLng(sensor.latitude, sensor.longitude),
-              builder: (ctx) =>
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      DecoratedIcon(
-                        icon: Icon(
-                          FontAwesomeIcons.locationPin, size: 50.0,
-                          color: ColorByValue.get(sensor.value),
-                          shadows: [
-                            Shadow(color: Colors.black54,
-                              blurRadius: 10,
-                              offset: Offset(0, 0),),
-                          ],
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0.0,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 6.0),
-                          child: Text(
-                            sensor.value.toInt().toString(),
-                            style: TextStyle(
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-            )
-        )
-      ];
-
   void init() {
     _loadSavedCity();
   }
