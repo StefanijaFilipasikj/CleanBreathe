@@ -15,6 +15,7 @@ import '../../../common/navigation/view/widgets/navbar.dart';
 import '../../view-model/map_view_model.dart';
 import '../widgets/dates_heading.dart';
 import '../widgets/advanced_overlay.dart';
+import '../../../rankings/view/pages/rankings_page.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -50,6 +51,12 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  void _navigateToRankings(BuildContext context) {
+    Navigator.push(context,
+      MaterialPageRoute(builder: (context) => RankingsPage()),
+    );
+  }
+
   void _defaultCallback() {}
 
   @override
@@ -65,8 +72,8 @@ class _MapPageState extends State<MapPage> {
               BottomButtons(
                   _defaultCallback,             // TODO: Map callback
                   _defaultCallback,             // TODO: Devices callback
-                  _toggleAdvancedInformation,   // Advanced information callback
-                  _defaultCallback              // TODO: Rankings callback
+                  _toggleAdvancedInformation,
+                  () => _navigateToRankings(context)
               ),
             ],
           ),
