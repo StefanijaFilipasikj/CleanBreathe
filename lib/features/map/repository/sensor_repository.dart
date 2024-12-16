@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:clean_breathe/features/map/model/sensor_details.dart';
 import 'package:http/http.dart' as http;
+import 'package:latlong2/latlong.dart';
 import '../model/sensor.dart';
 import '../../common/utils/values.dart';
 
@@ -33,6 +35,31 @@ class SensorRepository {
       }
     } catch (e) {
       throw Exception("Error fetching sensors: $e");
+    }
+  }
+
+  Future<SensorDetails> fetchSensorDetails(String cityName, String sensorId) async {
+    final url = Uri.parse("https://$cityName.pulse.eco/rest/sensor/$sensorId");
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        dynamic data = json.decode(response.body);
+        var position = data['position'].split(',');
+        return SensorDetails(
+          data['sensorId'],
+          new LatLng(double.parse(position[0]), double.parse(position[1])),
+          data['type'],
+          data['description'],
+          data['comments'],
+          data['status'],
+        );
+      } else {
+        throw Exception("Failed to load sensor details");
+      }
+    } catch (e) {
+      throw Exception("Error fetching sensor details: $e");
     }
   }
 

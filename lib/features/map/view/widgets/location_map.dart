@@ -12,8 +12,9 @@ class LocationMap extends StatelessWidget {
   final MapController _mapController;
   final LatLng? _currentLocation;
   final List<Sensor> _sensors;
+  final void Function(String) _onMarkerPress;
 
-  LocationMap(this._mapController, this._currentLocation, this._sensors);
+  LocationMap(this._mapController, this._currentLocation, this._sensors, this._onMarkerPress);
 
   @override
   Widget build(BuildContext context) {
@@ -66,37 +67,39 @@ class LocationMap extends StatelessWidget {
         ..._sensors.map((sensor) =>
             Marker(
               point: LatLng(sensor.latitude, sensor.longitude),
-              builder: (ctx) =>
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      DecoratedIcon(
-                        icon: Icon(
-                          FontAwesomeIcons.locationPin, size: 50.0,
-                          color: ColorByValue.get(sensor.value),
-                          shadows: [
-                            Shadow(color: Colors.black54,
-                              blurRadius: 10,
-                              offset: Offset(0, 0),),
-                          ],
-                        ),
+              builder: (ctx) => GestureDetector(
+                onTap: () => _onMarkerPress(sensor.sensorId),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    DecoratedIcon(
+                      icon: Icon(
+                        FontAwesomeIcons.locationPin, size: 50.0,
+                        color: ColorByValue.get(sensor.value),
+                        shadows: [
+                          Shadow(color: Colors.black54,
+                            blurRadius: 10,
+                            offset: Offset(0, 0),),
+                        ],
                       ),
-                      Positioned(
-                        bottom: 0.0,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 6.0),
-                          child: Text(
-                            sensor.value.toInt().toString(),
-                            style: TextStyle(
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                    ),
+                    Positioned(
+                      bottom: 0.0,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 6.0),
+                        child: Text(
+                          sensor.value.toInt().toString(),
+                          style: TextStyle(
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
+              )
             )
         )
       ];

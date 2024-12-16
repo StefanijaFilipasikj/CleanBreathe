@@ -1,15 +1,14 @@
-import 'package:clean_breathe/features/common/static_info/colors_by_value.dart';
+import 'package:clean_breathe/features/common/utils/change_value_to_unit.dart';
 import 'package:clean_breathe/features/common/utils/values.dart';
+import 'package:clean_breathe/features/map/model/sensor_details.dart';
+import 'package:clean_breathe/features/map/model/sensor_details_measurements.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/sensor.dart';
 import '../repository/sensor_repository.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:icon_decoration/icon_decoration.dart';
 
 class MapViewModel extends ChangeNotifier {
   final SensorRepository _sensorRepository;
@@ -21,6 +20,8 @@ class MapViewModel extends ChangeNotifier {
   List<Sensor> _sensors = [];
   String _selectedPollutant = "pm10"; // Default pollutant
   String _selectedDate = DateTime.now().toString(); // Default date
+  bool _isSensorSelected = false;
+  SensorDetailsMeasurements? _selectedSensor = null;
 
   MapViewModel(this._sensorRepository);
 
@@ -32,9 +33,33 @@ class MapViewModel extends ChangeNotifier {
   String get selectedPollutant => _selectedPollutant;
   String get selectedDate => _selectedDate;
   List<Sensor> get sensors => _sensors;
+  bool get isSensorSelected => _isSensorSelected;
+  SensorDetailsMeasurements? get selectedSensor => _selectedSensor;
 
   void init() {
     _loadSavedCity();
+  }
+
+  Future<void> selectSensor(String sensorId) async {
+    Sensor sensorValue = _sensors.where((sensor) => sensor.sensorId == sensorId).single;
+    String sensorName = (await _sensorRepository.fetchSensorDetails(_currentCity!, sensorId)).description;
+
+    _selectedSensor = new SensorDetailsMeasurements(
+        sensorName,
+        sensorValue.value.toInt().toString(),
+        changeValueToUnit(sensorValue.type),
+        "${sensorValue.timeStamp.hour}:${sensorValue.timeStamp.minute}",
+        "${sensorValue.timeStamp.day}.${sensorValue.timeStamp.month}.${sensorValue.timeStamp.year}",
+    );
+    _isSensorSelected = true;
+
+    notifyListeners();
+  }
+
+  void unselectSensor() {
+    _selectedSensor = null;
+    _isSensorSelected = false;
+    notifyListeners();
   }
 
   Future<void> _loadSavedCity() async {
@@ -174,13 +199,7 @@ class MapViewModel extends ChangeNotifier {
   }
 
   String pollutantMeasure() {
-    return switch (_selectedPollutant) {
-      "noise" => "dBA",
-      "temperature" => "°C",
-      "humidity" => "%",
-      "pressure" => "hPa",
-      _ => "μg/m³",
-    };
+    return changeValueToUnit(_selectedPollutant);
   }
 
   void updateCity(String cityName, LatLng location, String country) {
