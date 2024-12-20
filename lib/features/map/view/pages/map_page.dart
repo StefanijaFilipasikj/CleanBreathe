@@ -1,4 +1,5 @@
 import 'package:clean_breathe/features/common/average_display/view/widgets/average_in_city.dart';
+import 'package:clean_breathe/features/devices/view/page/devices_page.dart';
 import 'package:clean_breathe/features/map/view-model/toggling_view_model.dart';
 import 'package:clean_breathe/features/map/view/widgets/locator_button.dart';
 import 'package:clean_breathe/features/map/view/widgets/disclaimer_button.dart';
@@ -26,6 +27,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final MapController _mapController = MapController();
   bool _showAdvancedInformation = false;
+  final GlobalKey<BottomButtonsState> bottomButtonsKey = GlobalKey<BottomButtonsState>();
 
   VoidCallback _zoomToCurrentLocation(LatLng? currentLocation) {
     return () => {
@@ -50,6 +52,15 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  void _navigateToDevices(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const DevicesPage(),
+    )).then((_) {
+      bottomButtonsKey.currentState?.resetSelectedIndex();
+    });
+  }
+
+
   void _defaultCallback() {}
 
   @override
@@ -63,10 +74,11 @@ class _MapPageState extends State<MapPage> {
                 child: _mainContent(context),
               ),
               BottomButtons(
-                  _defaultCallback,             // TODO: Map callback
-                  _defaultCallback,             // TODO: Devices callback
-                  _toggleAdvancedInformation,   // Advanced information callback
-                  _defaultCallback              // TODO: Rankings callback
+                  key: bottomButtonsKey,
+                  mapCallback: _defaultCallback,
+                  devicesCallback: () => _navigateToDevices(context),
+                  advancedInformationCallback: _toggleAdvancedInformation,
+                  rankingsCallback: _defaultCallback
               ),
             ],
           ),
