@@ -5,6 +5,9 @@ import '../../../common/static_info/colors_by_value.dart';
 import '../../../common/static_info/flags.dart';
 
 class RankingsPage extends StatefulWidget {
+
+  const RankingsPage({super.key});
+
   @override
   _RankingsPageState createState() => _RankingsPageState();
 }

@@ -54,9 +54,11 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _navigateToRankings(BuildContext context) {
-    Navigator.push(context,
-      MaterialPageRoute(builder: (context) => RankingsPage()),
-    );
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const RankingsPage(),
+    )).then((_) {
+      bottomButtonsKey.currentState?.resetSelectedIndex();
+    });
   }
 
   void _navigateToDevices(BuildContext context) {
