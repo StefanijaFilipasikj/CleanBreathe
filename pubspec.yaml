@@ -21,6 +21,7 @@ dependencies:
   shared_preferences: ^2.0.15
   fl_chart: 0.69.2
   location: ^5.0.3
+  home_widget: any
 
 dev_dependencies:
   flutter_test:
