@@ -16,6 +16,7 @@ import '../../../common/navigation/view/widgets/navbar.dart';
 import '../../view-model/map_view_model.dart';
 import '../widgets/dates_heading.dart';
 import '../widgets/advanced_overlay.dart';
+import '../../../rankings/view/pages/rankings_page.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -52,6 +53,14 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  void _navigateToRankings(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const RankingsPage(),
+    )).then((_) {
+      bottomButtonsKey.currentState?.resetSelectedIndex();
+    });
+  }
+
   void _navigateToDevices(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const DevicesPage(),
@@ -59,7 +68,6 @@ class _MapPageState extends State<MapPage> {
       bottomButtonsKey.currentState?.resetSelectedIndex();
     });
   }
-
 
   void _defaultCallback() {}
 
@@ -78,7 +86,7 @@ class _MapPageState extends State<MapPage> {
                   mapCallback: _defaultCallback,
                   devicesCallback: () => _navigateToDevices(context),
                   advancedInformationCallback: _toggleAdvancedInformation,
-                  rankingsCallback: _defaultCallback
+                  rankingsCallback: () => _navigateToRankings(context)
               ),
             ],
           ),
