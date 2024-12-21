@@ -1,3 +1,5 @@
+import 'package:clean_breathe/features/common/static_info/colors_by_value.dart';
+import 'package:clean_breathe/features/common/static_info/texts_by_average.dart';
 import 'package:clean_breathe/features/common/utils/change_value_to_unit.dart';
 import 'package:clean_breathe/features/common/utils/values.dart';
 import 'package:clean_breathe/features/map/model/sensor_details.dart';
@@ -5,6 +7,7 @@ import 'package:clean_breathe/features/map/model/sensor_details_measurements.dar
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/sensor.dart';
@@ -192,9 +195,20 @@ class MapViewModel extends ChangeNotifier {
   }
 
   double cityAverage() {
+    HomeWidget.saveWidgetData<String>('currentCity', _currentCity);
+
     if (_sensors.length == 0) return 0.0;
     double avg = _sensors.map((s) => s.value).reduce((a, b) => a + b) / _sensors.length;
     Values.average = avg;
+
+    HomeWidget.saveWidgetData<String>('pollutionText', TextByAvgValue.get().split('.').first.trim());
+
+    final color = ColorByValue.get(avg);
+    final colorHex = '#${color.value.toRadixString(16).padLeft(8, '0').substring(2)}';
+    HomeWidget.saveWidgetData<String>('widgetBackgroundColor', colorHex);
+    HomeWidget.saveWidgetData<String>('averageAQI', avg.toStringAsFixed(0));
+    HomeWidget.updateWidget(name: 'HomeScreenWidgetProvider', androidName: 'com.example.clean_breathe.HomeScreenWidgetProvider');
+
     return avg;
   }
 
