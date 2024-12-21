@@ -2,31 +2,38 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 
 class BottomButtons extends StatefulWidget {
-  final VoidCallback _mapCallback;
-  final VoidCallback _devicesCallback;
-  final VoidCallback _advancedInformationCallback;
-  final VoidCallback _rankingsCallback;
+  final VoidCallback mapCallback;
+  final VoidCallback devicesCallback;
+  final VoidCallback advancedInformationCallback;
+  final VoidCallback rankingsCallback;
 
-  BottomButtons([
-    this._mapCallback = _defaultCallback,
-    this._devicesCallback = _defaultCallback,
-    this._advancedInformationCallback = _defaultCallback,
-    this._rankingsCallback = _defaultCallback
-  ]);
+  BottomButtons({
+  Key? key,
+  this.mapCallback = _defaultCallback,
+  this.devicesCallback = _defaultCallback,
+  this.advancedInformationCallback = _defaultCallback,
+  this.rankingsCallback = _defaultCallback
+  }) : super(key: key);
 
   static void _defaultCallback() {}
 
   @override
-  _BottomButtonsState createState() => _BottomButtonsState();
+  BottomButtonsState createState() => BottomButtonsState();
 }
 
-class _BottomButtonsState extends State<BottomButtons> {
+class BottomButtonsState extends State<BottomButtons> {
   int _selectedIndex = -1;
+
+  void resetSelectedIndex() {
+    setState(() {
+      _selectedIndex = 0; // map
+    });
+  }
 
   void _toggleSelection(int index) {
     setState(() {
       if(index != 2 && _selectedIndex == 2){ //if advanced was clicked then something else - hide advanced
-        widget._advancedInformationCallback();
+        widget.advancedInformationCallback();
       }
       _selectedIndex = (_selectedIndex == index) ? 0 : index; //if something was un-clicked go back to map (0)
     });
@@ -35,10 +42,10 @@ class _BottomButtonsState extends State<BottomButtons> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> bottomButtonsInfo = [
-      {"icon": FontAwesomeIcons.map, "label": "Map", "onPressed": widget._mapCallback},
-      {"icon": FontAwesomeIcons.plus, "label": "Devices", "onPressed": widget._devicesCallback},
-      {"icon": FontAwesomeIcons.chartLine, "label": "Advanced", "onPressed": widget._advancedInformationCallback},
-      {"icon": FontAwesomeIcons.rankingStar, "label": "Rankings", "onPressed": widget._rankingsCallback},
+      {"icon": FontAwesomeIcons.map, "label": "Map", "onPressed": widget.mapCallback},
+      {"icon": FontAwesomeIcons.plus, "label": "Devices", "onPressed": widget.devicesCallback},
+      {"icon": FontAwesomeIcons.chartLine, "label": "Advanced", "onPressed": widget.advancedInformationCallback},
+      {"icon": FontAwesomeIcons.rankingStar, "label": "Rankings", "onPressed": widget.rankingsCallback},
     ];
 
     return Container(
