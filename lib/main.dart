@@ -1,3 +1,4 @@
+import 'package:clean_breathe/features/devices/view-model/device_view_model.dart';
 import 'package:clean_breathe/features/map/repository/sensor_repository.dart';
 import 'package:clean_breathe/features/map/view-model/map_view_model.dart';
 import 'package:clean_breathe/features/map/view-model/toggling_view_model.dart';
@@ -20,6 +21,9 @@ void main() {
         ChangeNotifierProvider(
             create: (_) => TogglingViewModel()
         ),
+        ChangeNotifierProvider(
+            create: (_) => DeviceViewModel()
+        ),
       ],
       child: const MyApp(),
     ),
@@ -33,6 +37,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.light(
+          primary: Colors.black,
+          secondary: Colors.green,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black87),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green, width: 2.0),
+          ),
+          labelStyle: TextStyle(
+            color: Colors.black87
+          ),
+          hintStyle: TextStyle(
+            color: Colors.black.withOpacity(0.5),
+          ),
+        ),
+      ),
       home: const LoadingScreen(),
     );
   }
