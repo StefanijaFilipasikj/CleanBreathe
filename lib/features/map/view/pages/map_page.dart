@@ -7,6 +7,7 @@ import 'package:clean_breathe/features/map/view/widgets/disclaimer_dialog.dart';
 import 'package:clean_breathe/features/map/view/widgets/location_map.dart';
 import 'package:clean_breathe/features/map/view/widgets/pollutants_heading.dart';
 import 'package:clean_breathe/features/map/view/widgets/pollutants_history_toggler.dart';
+import 'package:clean_breathe/features/map/view/widgets/sensor_details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -73,13 +74,15 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final mapViewModel = Provider.of<MapViewModel>(context);
+
     return Scaffold(
       body: Stack(
         children: [
           Column(
             children: [
               Expanded(
-                child: _mainContent(context),
+                child: _mainContent(context, mapViewModel),
               ),
               BottomButtons(
                   key: bottomButtonsKey,
@@ -90,6 +93,9 @@ class _MapPageState extends State<MapPage> {
               ),
             ],
           ),
+          if (mapViewModel.isSensorSelected) ...[
+            SensorDetailsCard(mapViewModel.selectedSensor!, mapViewModel.unselectSensor),
+          ],
           if (_showAdvancedInformation)
             AdvancedOverlayWidget(
               toggleAdvancedInformation: _toggleAdvancedInformation,
@@ -99,8 +105,7 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  Widget _mainContent(BuildContext context) {
-    final mapViewModel = Provider.of<MapViewModel>(context);
+  Widget _mainContent(BuildContext context, MapViewModel mapViewModel) {
     final togglingViewModel = Provider.of<TogglingViewModel>(context);
 
     if (mapViewModel.isLoading || mapViewModel.loadingSensors) {
@@ -133,7 +138,7 @@ class _MapPageState extends State<MapPage> {
             Expanded(
               child: Stack(
                 children: [
-                  LocationMap(_mapController, mapViewModel.currentLocation, mapViewModel.sensorMarkers, mapViewModel.sensors),
+                  LocationMap(_mapController, mapViewModel.currentLocation, mapViewModel.sensors, mapViewModel.selectSensor),
                   AverageInCityDisplay(mapViewModel.cityAverage(), mapViewModel.pollutantMeasure(), true),
                   CenterPositionButton(_zoomToCurrentLocation(mapViewModel.currentLocation)),
                   DisclaimerButton(onPressed: _showDisclaimerDialog)

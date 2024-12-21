@@ -3,17 +3,18 @@ import 'package:clean_breathe/features/map/model/sensor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:icon_decoration/icon_decoration.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 
 class LocationMap extends StatelessWidget {
   final MapController _mapController;
   final LatLng? _currentLocation;
-  final List<Marker> _sensorMarkers;
   final List<Sensor> _sensors;
+  final void Function(String) _onMarkerPress;
 
-
-  LocationMap(this._mapController, this._currentLocation, this._sensorMarkers, this._sensors);
+  LocationMap(this._mapController, this._currentLocation, this._sensors, this._onMarkerPress);
 
   @override
   Widget build(BuildContext context) {
@@ -60,4 +61,46 @@ class LocationMap extends StatelessWidget {
       ],
     );
   }
+
+  List<Marker> get _sensorMarkers =>
+      [
+        ..._sensors.map((sensor) =>
+            Marker(
+              point: LatLng(sensor.latitude, sensor.longitude),
+              builder: (ctx) => GestureDetector(
+                onTap: () => _onMarkerPress(sensor.sensorId),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    DecoratedIcon(
+                      icon: Icon(
+                        FontAwesomeIcons.locationPin, size: 50.0,
+                        color: ColorByValue.get(sensor.value),
+                        shadows: [
+                          Shadow(color: Colors.black54,
+                            blurRadius: 10,
+                            offset: Offset(0, 0),),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0.0,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 6.0),
+                        child: Text(
+                          sensor.value.toInt().toString(),
+                          style: TextStyle(
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            )
+        )
+      ];
 }
