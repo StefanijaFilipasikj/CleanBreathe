@@ -69,7 +69,7 @@ class CityTile extends StatelessWidget {
                   future: mapViewModel.averageForCity(city.name),
                   builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green));
                     } else if (snapshot.hasError) {
                       return Text('No data available');
                     } else if (snapshot.hasData) {
