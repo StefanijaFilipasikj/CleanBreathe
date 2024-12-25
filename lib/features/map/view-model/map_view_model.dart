@@ -2,7 +2,6 @@ import 'package:clean_breathe/features/common/static_info/colors_by_value.dart';
 import 'package:clean_breathe/features/common/static_info/texts_by_average.dart';
 import 'package:clean_breathe/features/common/utils/change_value_to_unit.dart';
 import 'package:clean_breathe/features/common/utils/values.dart';
-import 'package:clean_breathe/features/map/model/sensor_details.dart';
 import 'package:clean_breathe/features/map/model/sensor_details_measurements.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -43,6 +42,7 @@ class MapViewModel extends ChangeNotifier {
     _loadSavedCity();
   }
 
+
   Future<void> selectSensor(String sensorId) async {
     Sensor sensorValue = _sensors.where((sensor) => sensor.sensorId == sensorId).single;
     String sensorName = (await _sensorRepository.fetchSensorDetails(_currentCity!, sensorId)).description;
@@ -77,7 +77,7 @@ class MapViewModel extends ChangeNotifier {
       if (lat != null && lon != null) {
         _currentLocation = LatLng(double.parse(lat), double.parse(lon));
       }
-      _isLoading = false; // Ensure loading is complete
+      _isLoading = false;
       notifyListeners();
 
       await _fetchSensorsForSavedCity();
@@ -149,7 +149,6 @@ class MapViewModel extends ChangeNotifier {
         var _cityNameTrim = _currentCity!.replaceAll(RegExp(r"\s+"), "");
         await _fetchSensors(_cityNameTrim, _selectedPollutant, _selectedDate);
 
-        // Save city to SharedPreferences
         await _saveCity(_currentCity!, _currentCountry!, _currentLocation!);
       }
     } catch (e) {
