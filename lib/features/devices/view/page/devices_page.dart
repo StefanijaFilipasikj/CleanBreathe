@@ -1,6 +1,8 @@
 import 'package:clean_breathe/features/devices/view/page/edit_device_page.dart';
+import 'package:clean_breathe/features/login/LoginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../view-model/device_view_model.dart';
 import 'add_device_page.dart';
 
@@ -10,12 +12,27 @@ class DevicesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: const Text('My Devices'),
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.black),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          Container(
+            child: TextButton(
+              onPressed: () => _logout(context),
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.white),
+
+              ),
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.black)),
+
+            ),
+            margin: const EdgeInsets.only(right: 10.0)
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -64,8 +81,12 @@ class DevicesPage extends StatelessWidget {
                           children: [
                             IconButton(
                               icon: Icon(
-                                device.status == "active" ? Icons.toggle_on : Icons.toggle_off,
-                                color: device.status == "active" ? Colors.black: Colors.black38,
+                                device.status == "active"
+                                    ? Icons.toggle_on
+                                    : Icons.toggle_off,
+                                color: device.status == "active"
+                                    ? Colors.black
+                                    : Colors.black38,
                               ),
                               onPressed: () {
                                 viewModel.toggleDeviceStatus(device);
@@ -75,19 +96,22 @@ class DevicesPage extends StatelessWidget {
                               icon: const Icon(Icons.edit, color: Colors.black),
                               onPressed: () {
                                 Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) => EditDevicePage(device: device)),
+                                  MaterialPageRoute(builder: (context) =>
+                                      EditDevicePage(device: device)),
                                 );
                               },
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.black),
+                              icon: const Icon(
+                                  Icons.delete, color: Colors.black),
                               onPressed: () {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: const Text('Delete Device'),
-                                      content: const Text('Are you sure you want to delete this device?'),
+                                      content: const Text(
+                                          'Are you sure you want to delete this device?'),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.zero,
                                       ),
@@ -96,9 +120,10 @@ class DevicesPage extends StatelessWidget {
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: const Text('Cancel', style: TextStyle(color: Colors.black),),
+                                          child: const Text('Cancel',
+                                            style: TextStyle(
+                                                color: Colors.black),),
                                         ),
-                                        // Delete Button
                                         TextButton(
                                           onPressed: () {
                                             viewModel.deleteDevice(device);
@@ -106,7 +131,8 @@ class DevicesPage extends StatelessWidget {
                                           },
                                           child: const Text(
                                             'Delete',
-                                            style: TextStyle(color: Colors.black),
+                                            style: TextStyle(
+                                                color: Colors.black),
                                           ),
                                         ),
                                       ],
@@ -120,9 +146,11 @@ class DevicesPage extends StatelessWidget {
                       ],
                     ),
                     children: [
-                      _buildDeviceDetail('Sensor ID', device.sensorId.toString()),
+                      _buildDeviceDetail(
+                          'Sensor ID', device.sensorId.toString()),
                       _buildDeviceDetail('Device ID', device.deviceId),
-                      _buildDeviceDetail('Position', '${device.longitude}, ${device.latitude}'),
+                      _buildDeviceDetail('Position',
+                          '${device.longitude}, ${device.latitude}'),
                       _buildDeviceDetail('Comment', device.comment),
                       _buildDeviceDetail('Description', device.description),
                       _buildDeviceDetail('Type', device.type),
@@ -153,7 +181,18 @@ class DevicesPage extends StatelessWidget {
 
   Widget _buildDeviceDetail(String label, String value) {
     return ListTile(
-      title: Text('$label: $value', style: const TextStyle(fontSize: 14, color: Colors.black)),
+      title: Text('$label: $value',
+          style: const TextStyle(fontSize: 14, color: Colors.black)),
+    );
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('user_logged_in', false);
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
     );
   }
 }

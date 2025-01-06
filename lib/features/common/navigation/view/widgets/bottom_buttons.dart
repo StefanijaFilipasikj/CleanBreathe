@@ -1,5 +1,7 @@
+import 'package:clean_breathe/features/login/LoginPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomButtons extends StatefulWidget {
   final VoidCallback mapCallback;
@@ -39,11 +41,27 @@ class BottomButtonsState extends State<BottomButtons> {
     });
   }
 
+  Future<void> _handleDevicesPressed(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('user_logged_in') ?? false;
+
+    if (isLoggedIn) {
+      widget.devicesCallback();
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginPage(),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> bottomButtonsInfo = [
       {"icon": FontAwesomeIcons.map, "label": "Map", "onPressed": widget.mapCallback},
-      {"icon": FontAwesomeIcons.plus, "label": "Devices", "onPressed": widget.devicesCallback},
+      {"icon": FontAwesomeIcons.plus, "label": "Devices", "onPressed": () => _handleDevicesPressed(context)},
       {"icon": FontAwesomeIcons.chartLine, "label": "Advanced", "onPressed": widget.advancedInformationCallback},
       {"icon": FontAwesomeIcons.rankingStar, "label": "Rankings", "onPressed": widget.rankingsCallback},
     ];
