@@ -206,7 +206,7 @@ class MapViewModel extends ChangeNotifier {
     final colorHex = '#${color.value.toRadixString(16).padLeft(8, '0').substring(2)}';
     HomeWidget.saveWidgetData<String>('widgetBackgroundColor', colorHex);
     HomeWidget.saveWidgetData<String>('averageAQI', avg.toStringAsFixed(0));
-    HomeWidget.updateWidget(name: 'HomeScreenWidgetProvider', androidName: 'com.example.clean_breathe.HomeScreenWidgetProvider');
+    HomeWidget.updateWidget(name: 'HomeScreenWidgetProvider', qualifiedAndroidName: 'com.example.clean_breathe.HomeScreenWidgetProvider');
 
     return avg;
   }
