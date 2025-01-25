@@ -12,14 +12,13 @@ class PollutantsHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: find better icons/photos
     final pollutants = [
       {"label": "pm10", "name": "pm10", "icon": Icons.scatter_plot},
-      {"label": "pm2.5", "name": "pm25", "icon": Icons.scatter_plot},
+      {"label": "pm2.5", "name": "pm25", "icon": "assets/images/pm25_icon.png"},
       {"label": "temp", "name": "temperature", "icon": Icons.thermostat},
       {"label": "humidity", "name": "humidity", "icon": Icons.water_drop},
-      {"label": "pressure", "name": "pressure", "icon": Icons.compress},
-      {"label": "noise", "name": "noise", "icon": Icons.volume_up},
+      {"label": "pressure", "name": "pressure", "icon": "assets/images/pressure_icon.png"},
+      {"label": "noise", "name": "noise", "icon": "assets/images/noise_icon.png"},
     ];
 
     final screenWidth = MediaQuery.of(context).size.width;
@@ -33,7 +32,7 @@ class PollutantsHeading extends StatelessWidget {
         children: pollutants.map((pollutant) {
           final label = pollutant["label"] as String;
           final name = pollutant["name"] as String;
-          final icon = pollutant["icon"] as IconData;
+          final icon = name == "pm25" || name == "noise" || name == "pressure" ? pollutant["icon"] as String : pollutant["icon"] as IconData;
           final isSelected = name == selectedPollutant;
 
           return SizedBox(
@@ -54,11 +53,18 @@ class PollutantsHeading extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    icon,
-                    size: 18,
-                    color: isSelected ? Colors.white : Colors.black,
-                  ),
+                  name == "pm25" || name == "noise" || name == "pressure" ?
+                    Image.asset(
+                      icon as String,
+                      width: 18,
+                      height: 18,
+                      color: isSelected ? Colors.white : Colors.black,
+                    ) :
+                    Icon(
+                      icon as IconData,
+                      size: 18,
+                      color: isSelected ? Colors.white : Colors.black,
+                    ),
                   const SizedBox(height: 2),
                   Text(
                     label.toUpperCase(),

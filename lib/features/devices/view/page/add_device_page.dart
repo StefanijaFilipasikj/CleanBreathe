@@ -1,9 +1,11 @@
+import 'package:clean_breathe/features/common/utils/values.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:location/location.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/gestures.dart';
 import '../../model/device.dart';
 import '../../view-model/device_view_model.dart';
 
@@ -75,8 +77,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
             child: Container(
               height: 450,
               child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 20.0, right: 20.0, top: 10.0, bottom: 20.0),
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -93,9 +94,12 @@ class _AddDevicePageState extends State<AddDevicePage> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.close),
+                          padding: EdgeInsets.only(left: 65),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
                         ),
                       ],
                     ),
@@ -140,19 +144,46 @@ class _AddDevicePageState extends State<AddDevicePage> {
           title: 'Step 3: Complete the process',
           content:
               'Click out of this window and fill out the form. You\'re device will then be added to our platform.\n'
-              '\n(RECOMMENDED)\nFor detailed information on building and placing you device check out the following links: \n'
-              '-https://pulse.eco/requestDeviceInfo \n'
-              '-https://pulse.eco/construct \n'
-              '-https://pulse.eco/constructWiFi\n'
-              '-https://pulse.eco/constructTTNUno\n'
-              '-https://pulse.eco/faq'
+              '(RECOMMENDED)\nFor detailed information on building and placing you device check out the following links: \n'
+              'https://' + Values.city + '.pulse.eco/requestDeviceInfo \n'
+              'https://pulse.eco/construct \n'
+              'https://pulse.eco/constructWiFi\n'
+              'https://pulse.eco/constructTTNUno\n'
+              'https://pulse.eco/faq'
         ),
       ],
     );
   }
 
-  Widget _buildInstructionPage(
-      {required String title, required String content}) {
+  Widget _buildInstructionPage({required String title, required String content}) {
+    final regex = RegExp(r'https://[^\s]+');
+    final parts = content.splitMapJoin(
+      regex,
+      onMatch: (match) => '###${match.group(0)}###',
+      onNonMatch: (text) => text,
+    );
+    final List<TextSpan> textSpans = [];
+    for (final part in parts.split('###')) {
+      if (part.startsWith('http')) {
+        textSpans.add(
+          TextSpan(
+            text: part,
+            style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline, height: 1.45),
+            recognizer: TapGestureRecognizer()..onTap = () {
+              launchURL(part);
+            },
+          ),
+        );
+      } else {
+        textSpans.add(
+          TextSpan(
+              text: part,
+              style: TextStyle(color: Colors.black, height: 1.45),
+          ),
+        );
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -164,7 +195,11 @@ class _AddDevicePageState extends State<AddDevicePage> {
           ),
         ),
         const SizedBox(height: 10),
-        Text(content),
+        RichText(
+          text: TextSpan(
+            children: textSpans,
+          ),
+        ),
         const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -240,7 +275,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
               const Text('Position', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               SizedBox(
-                height: 220,
+                height: 230,
                 child: FlutterMap(
                   mapController: _mapController,
                   options: MapOptions(
@@ -283,6 +318,14 @@ class _AddDevicePageState extends State<AddDevicePage> {
                     Transform.scale(
                       scale: 1.3,
                       child: Checkbox(
+                        side: WidgetStateBorderSide.resolveWith(
+                              (Set<WidgetState> states) {
+                            if (states.contains(WidgetState.selected)) {
+                              return const BorderSide(width: 1, color: Colors.green);
+                            }
+                            return const BorderSide(width: 1, color: Colors.black87);
+                          },
+                        ),
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         visualDensity: VisualDensity(horizontal: -4),
                         value: _useCurrentLocation,
@@ -304,18 +347,22 @@ class _AddDevicePageState extends State<AddDevicePage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Description',
                 ),
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
                 onSaved: (value) => _description = value ?? '',
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Comment',
                 ),
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
                 onSaved: (value) => _comment = value ?? '',
               ),
               const SizedBox(height: 40),
@@ -357,4 +404,8 @@ class _AddDevicePageState extends State<AddDevicePage> {
       ),
     );
   }
+}
+
+void launchURL(String url) async {
+  await launch(url);
 }

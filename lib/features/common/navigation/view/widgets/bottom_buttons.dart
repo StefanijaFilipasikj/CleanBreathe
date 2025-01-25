@@ -1,4 +1,4 @@
-import 'package:clean_breathe/features/login/LoginPage.dart';
+import 'package:clean_breathe/features/auth/LoginPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +24,7 @@ class BottomButtons extends StatefulWidget {
 }
 
 class BottomButtonsState extends State<BottomButtons> {
-  int _selectedIndex = -1;
+  int _selectedIndex = 0;
 
   void resetSelectedIndex() {
     setState(() {
@@ -61,13 +61,18 @@ class BottomButtonsState extends State<BottomButtons> {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> bottomButtonsInfo = [
       {"icon": FontAwesomeIcons.map, "label": "Map", "onPressed": widget.mapCallback},
-      {"icon": FontAwesomeIcons.plus, "label": "Devices", "onPressed": () => _handleDevicesPressed(context)},
+      {"icon": FontAwesomeIcons.plus, "label": "Devices", "onPressed": () async {
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('login_redirect', 'devices');
+          _handleDevicesPressed(context);
+        }
+      },
       {"icon": FontAwesomeIcons.chartLine, "label": "Advanced", "onPressed": widget.advancedInformationCallback},
       {"icon": FontAwesomeIcons.rankingStar, "label": "Rankings", "onPressed": widget.rankingsCallback},
     ];
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.085,
+      height: MediaQuery.of(context).size.height * 0.07,
       color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -88,7 +93,7 @@ class BottomButtonsState extends State<BottomButtons> {
                 Icon(
                   buttonInfo["icon"] as IconData,
                   color: isSelected ? Colors.green : Colors.black,
-                  size: 30,
+                  size: 28,
                 ),
                 Text(
                   buttonInfo["label"] as String,

@@ -1,5 +1,5 @@
 import 'package:clean_breathe/features/devices/view/page/edit_device_page.dart';
-import 'package:clean_breathe/features/login/LoginPage.dart';
+import 'package:clean_breathe/features/map/view/pages/map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +14,13 @@ class DevicesPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Devices'),
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MapPage()),
+          )
+        ),
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.black),
         centerTitle: true,
@@ -22,12 +29,9 @@ class DevicesPage extends StatelessWidget {
           Container(
             child: TextButton(
               onPressed: () => _logout(context),
-              child: const Text(
-                'Logout',
-                style: TextStyle(color: Colors.white),
-
+              child: const Icon(
+                  Icons.logout_outlined
               ),
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.black)),
 
             ),
             margin: const EdgeInsets.only(right: 10.0)
@@ -35,132 +39,138 @@ class DevicesPage extends StatelessWidget {
         ],
       ),
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-        child: Consumer<DeviceViewModel>(
-          builder: (context, viewModel, child) {
-            if (viewModel.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                ),
-              );
-            }
-
-            if (viewModel.devices.isEmpty) {
-              return const Center(child: Text('No devices available.'));
-            }
-
-            return ListView.builder(
-              itemCount: viewModel.devices.length,
-              itemBuilder: (context, index) {
-                final device = viewModel.devices[index];
-
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 20.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero,
-                  ),
-                  elevation: 5,
-                  color: Colors.white,
-                  child: ExpansionTile(
-                    title: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            device.deviceId,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                device.status == "active"
-                                    ? Icons.toggle_on
-                                    : Icons.toggle_off,
-                                color: device.status == "active"
-                                    ? Colors.black
-                                    : Colors.black38,
-                              ),
-                              onPressed: () {
-                                viewModel.toggleDeviceStatus(device);
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.black),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) =>
-                                      EditDevicePage(device: device)),
-                                );
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                  Icons.delete, color: Colors.black),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Delete Device'),
-                                      content: const Text(
-                                          'Are you sure you want to delete this device?'),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('Cancel',
-                                            style: TextStyle(
-                                                color: Colors.black),),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            viewModel.deleteDevice(device);
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text(
-                                            'Delete',
-                                            style: TextStyle(
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    children: [
-                      _buildDeviceDetail(
-                          'Sensor ID', device.sensorId.toString()),
-                      _buildDeviceDetail('Device ID', device.deviceId),
-                      _buildDeviceDetail('Position',
-                          '${device.longitude}, ${device.latitude}'),
-                      _buildDeviceDetail('Comment', device.comment),
-                      _buildDeviceDetail('Description', device.description),
-                      _buildDeviceDetail('Type', device.type),
-                      _buildDeviceDetail('Status', device.status),
-                    ],
+      body: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+          child: Consumer<DeviceViewModel>(
+            builder: (context, viewModel, child) {
+              if (viewModel.isLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                   ),
                 );
-              },
-            );
-          },
+              }
+
+              if (viewModel.devices.isEmpty) {
+                return const Center(child: Text('No devices available.'));
+              }
+
+              return ListView.builder(
+                itemCount: viewModel.devices.length,
+                itemBuilder: (context, index) {
+                  final device = viewModel.devices[index];
+
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 20.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                    elevation: 5,
+                    color: Colors.black87,
+                    child: ExpansionTile(
+                      backgroundColor: Colors.black87,
+                      collapsedBackgroundColor: Colors.black87,
+                      iconColor: Color.fromRGBO(255, 255, 255, 0.85),
+                      collapsedIconColor: Color.fromRGBO(255, 255, 255, 0.85),
+                      
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              device.deviceId,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Color.fromRGBO(255, 255, 255, 0.85),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  device.status == "active"
+                                      ? Icons.toggle_on
+                                      : Icons.toggle_off,
+                                  color: device.status == "active"
+                                      ? Color.fromRGBO(83, 159, 66, 1.0)
+                                      : Colors.white70,
+                                ),
+                                onPressed: () {
+                                  viewModel.toggleDeviceStatus(device);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.edit, color: Color.fromRGBO(47, 117, 175, 1.0)),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) =>
+                                        EditDevicePage(device: device)),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                    Icons.delete, color: Color.fromRGBO(179, 55, 67, 1.0)),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Delete Device'),
+                                        content: const Text(
+                                            'Are you sure you want to delete this device?'),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.zero,
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Cancel',
+                                              style: TextStyle(
+                                                  color: Colors.black),),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              viewModel.deleteDevice(device);
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text(
+                                              'Delete',
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      children: [
+                        _buildDeviceDetail('Sensor ID', device.sensorId.toString()),
+                        _buildDeviceDetail('Device ID', device.deviceId),
+                        _buildDeviceDetail('Position', '${device.longitude}, ${device.latitude}'),
+                        _buildDeviceDetail('Comment', device.comment),
+                        _buildDeviceDetail('Description', device.description),
+                        _buildDeviceDetail('Type', device.type),
+                        _buildDeviceDetail('Status', device.status),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -169,8 +179,8 @@ class DevicesPage extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const AddDevicePage()),
           );
         },
-        backgroundColor: Colors.white,
-        child: const Icon(Icons.add, color: Colors.black),
+        backgroundColor: Colors.black87,
+        child: const Icon(Icons.add, color: Colors.white),
         tooltip: 'Add New Device',
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
@@ -182,17 +192,17 @@ class DevicesPage extends StatelessWidget {
   Widget _buildDeviceDetail(String label, String value) {
     return ListTile(
       title: Text('$label: $value',
-          style: const TextStyle(fontSize: 14, color: Colors.black)),
+          style: const TextStyle(fontSize: 14, color: Color.fromRGBO(255, 255, 255, 0.85))),
     );
   }
 
   Future<void> _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('user_logged_in', false);
+    prefs.setBool('user_logged_in', false);
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => const MapPage()),
     );
   }
 }

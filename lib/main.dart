@@ -1,3 +1,4 @@
+import 'package:clean_breathe/features/city/repository/city_repository.dart';
 import 'package:clean_breathe/features/devices/view-model/device_view_model.dart';
 import 'package:clean_breathe/features/map/repository/sensor_repository.dart';
 import 'package:clean_breathe/features/map/view-model/map_view_model.dart';
@@ -13,7 +14,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => MapViewModel(SensorRepository())..init(),
+          create: (_) => MapViewModel(SensorRepository(), CityRepository())..init(),
         ),
         ChangeNotifierProvider(
           create: (_) => CityViewModel(),

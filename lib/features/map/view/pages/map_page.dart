@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../common/navigation/view/widgets/bottom_buttons.dart';
 import '../../../common/navigation/view/widgets/navbar.dart';
 import '../../view-model/map_view_model.dart';
@@ -30,6 +31,17 @@ class _MapPageState extends State<MapPage> {
   final MapController _mapController = MapController();
   bool _showAdvancedInformation = false;
   final GlobalKey<BottomButtonsState> bottomButtonsKey = GlobalKey<BottomButtonsState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _setLastVisitedPage();
+  }
+
+  Future<void> _setLastVisitedPage() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('login_redirect', 'map');
+  }
 
   VoidCallback _zoomToCurrentLocation(LatLng? currentLocation) {
     return () => {

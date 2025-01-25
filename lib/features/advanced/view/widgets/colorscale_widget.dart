@@ -42,9 +42,6 @@ class ColorScaleWidget extends StatelessWidget {
               final Color startColor = segment['color'] as Color;
               final Color endColor = colorSegments[index + 1]['color'] as Color;
 
-              final double currentValue = double.parse(colorSegments[index]['label'].split(' ')[0]);
-              final double nextValue = double.parse(colorSegments[index + 1]['label'].split(' ')[0]);
-
               return Flexible(
                 fit: FlexFit.tight,
                 child: Container(

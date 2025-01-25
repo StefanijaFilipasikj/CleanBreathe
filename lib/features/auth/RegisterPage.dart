@@ -1,5 +1,5 @@
 import 'package:clean_breathe/features/devices/view/page/devices_page.dart';
-import 'package:clean_breathe/features/login/LoginPage.dart';
+import 'package:clean_breathe/features/auth/LoginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

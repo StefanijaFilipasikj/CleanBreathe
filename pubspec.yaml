@@ -23,6 +23,7 @@ dependencies:
   location: ^5.0.3
   home_widget: 0.7.0
   flutter_svg: 2.0.9
+  url_launcher: ^6.0.9
 
 dev_dependencies:
   flutter_test:
@@ -36,3 +37,6 @@ flutter:
         - asset: assets/fonts/DancingScript-Regular.ttf
   assets:
     - assets/images/pulse-logo.svg
+    - assets/images/pm25_icon.png
+    - assets/images/noise_icon.png
+    - assets/images/pressure_icon.png

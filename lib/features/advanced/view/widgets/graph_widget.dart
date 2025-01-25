@@ -76,7 +76,6 @@ class GraphWidget extends StatelessWidget {
                         final hour = (value.toInt() + now.hour) % 24;
                         final show = value.toInt() != -1;
                         final isNow = value.toInt() == 24;
-                        print(value.toInt());
                         return Padding(
                             padding: const EdgeInsets.only(right: 7.0, top: 4.0),
                             child: show ? Text(

@@ -20,7 +20,7 @@ class CitySelectionPage extends StatelessWidget {
           children: [
             if (mapViewModel.currentCity != null)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 0.0),
                 child: Column(
                   children: [
                     Container(
@@ -62,7 +62,7 @@ class CitySelectionPage extends StatelessWidget {
               ),
             if (cityViewModel.favorites.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 0.0),
                 child: Column(
                   children: [
                     Container(
@@ -98,7 +98,7 @@ class CitySelectionPage extends StatelessWidget {
               ),
             if (cityViewModel.history.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 0.0),
                 child: Column(
                   children: [
                     Container(

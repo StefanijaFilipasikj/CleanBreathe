@@ -1,5 +1,6 @@
 import 'package:clean_breathe/features/devices/view/page/devices_page.dart';
-import 'package:clean_breathe/features/login/RegisterPage.dart';
+import 'package:clean_breathe/features/auth/RegisterPage.dart';
+import 'package:clean_breathe/features/map/view/pages/map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,10 +42,17 @@ class _LoginPageState extends State<LoginPage> {
       prefs.setBool('user_logged_in', true);
 
       popup();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => DevicesPage()),
-      );
+      if(prefs.getString('login_redirect') == 'map'){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MapPage()),
+        );
+      }else{
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DevicesPage()),
+        );
+      }
     }
   }
 
@@ -53,10 +61,17 @@ class _LoginPageState extends State<LoginPage> {
     prefs.setBool('user_logged_in', true);
 
     popup();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => DevicesPage()),
-    );
+    if(prefs.getString('login_redirect') == 'map'){
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MapPage()),
+      );
+    }else{
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DevicesPage()),
+      );
+    }
   }
 
   @override

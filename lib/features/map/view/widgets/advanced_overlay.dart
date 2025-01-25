@@ -1,5 +1,3 @@
-//If we aren't considering this as a map widget, the file should be moved
-
 import 'package:flutter/material.dart';
 import '../../../advanced/view/pages/advanced_page.dart';
 
@@ -20,7 +18,7 @@ class AdvancedOverlayWidget extends StatelessWidget {
           ),
         ),
         Positioned(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 60.0,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 50.0,
           left: 0,
           right: 0,
           child: Container(

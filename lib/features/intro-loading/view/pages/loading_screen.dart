@@ -36,22 +36,21 @@ class _LoadingScreenState extends State<LoadingScreen> {
           children: [
             SvgPicture.asset(
               'assets/images/pulse-logo.svg',
-              width: 110,
-              height: 110,
+              width: 100,
+              height: 100,
               fit: BoxFit.contain,
             ),
-            const SizedBox(height: 20),
 
             const Text(
               "pulse.eco",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
+                fontSize: 38,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
 
             const Text(
               "• for the future minded •",
@@ -62,9 +61,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 fontStyle: FontStyle.normal,
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 40),
 
-            // Circular progress indicator
             const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),

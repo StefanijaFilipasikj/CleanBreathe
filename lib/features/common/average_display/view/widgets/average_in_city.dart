@@ -59,7 +59,7 @@ class _AverageInCityDisplayState extends State<AverageInCityDisplay> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "${widget.average.toInt()}",
+                            "${widget.average.toInt().toString()}",
                             style: TextStyle(
                               fontSize: _isExpanded ? 32 : 24,
                               color: Colors.white,

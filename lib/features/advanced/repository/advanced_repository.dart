@@ -7,7 +7,6 @@ class AdvancedRepository {
 
   Future<List<HourlyAverageValue>> getValueHistory() async {
 
-    //TODO: find a better way of formatting the dates for the api call
     final now = DateTime.now();
     final from = now.subtract(Duration(hours: 24)).toIso8601String().split('T')[0] + "T${now.subtract(Duration(hours: 24)).hour.toString().padLeft(2, '0')}:${now.subtract(Duration(hours: 24)).minute.toString().padLeft(2, '0')}:00%2b01:00";
     final to = now.toIso8601String().split('T')[0] + "T${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:59%2b01:00";
@@ -16,7 +15,6 @@ class AdvancedRepository {
     String valueType = Values.valueType;
 
     final url = Uri.parse("https://$cityName.pulse.eco/rest/dataRaw?type=$valueType&from=$from&to=$to");
-    print(url);
 
     try {
       final response = await http.get(url);
@@ -43,7 +41,6 @@ class AdvancedRepository {
           DateTime hourTimestamp = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, hour);
           hourlyAverages.add(HourlyAverageValue(timestamp: hourTimestamp, value: average));
         }
-
         return hourlyAverages;
 
       } else {

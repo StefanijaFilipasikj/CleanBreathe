@@ -37,7 +37,6 @@ class LocationMap extends StatelessWidget {
             markers: _sensorMarkers,
             builder: (context, markers) {
 
-              // TODO: think of better solution for calculating average
               var filteredSensors = _sensors.where((sensor) => markers.any((marker) => marker.point.latitude == sensor.latitude && marker.point.longitude == sensor.longitude)).toList();
               double averageValue = filteredSensors.map((sensor) => sensor.value).reduce((a, b) => a + b) / filteredSensors.length;
 

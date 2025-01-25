@@ -93,7 +93,7 @@ class DatesHeading extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                average != null ? '${average.toStringAsFixed(0)}' : 'no data',
+                                average != null ? '${average.toInt().toString()}' : 'no data',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 9,

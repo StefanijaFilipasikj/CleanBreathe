@@ -1,3 +1,4 @@
+import 'package:clean_breathe/features/city/model/city.dart';
 import 'package:clean_breathe/features/common/static_info/colors_by_value.dart';
 import 'package:clean_breathe/features/common/static_info/texts_by_average.dart';
 import 'package:clean_breathe/features/common/utils/change_value_to_unit.dart';
@@ -11,9 +12,11 @@ import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/sensor.dart';
 import '../repository/sensor_repository.dart';
+import '../../city/repository/city_repository.dart';
 
 class MapViewModel extends ChangeNotifier {
   final SensorRepository _sensorRepository;
+  final CityRepository _cityRepository;
   LatLng? _currentLocation;
   String? _currentCity;
   String? _currentCountry;
@@ -25,7 +28,7 @@ class MapViewModel extends ChangeNotifier {
   bool _isSensorSelected = false;
   SensorDetailsMeasurements? _selectedSensor = null;
 
-  MapViewModel(this._sensorRepository);
+  MapViewModel(this._sensorRepository, this._cityRepository);
 
   LatLng? get currentLocation => _currentLocation;
   String? get currentCity => _currentCity;
@@ -164,6 +167,7 @@ class MapViewModel extends ChangeNotifier {
 
     try {
       var _cityNameTrim = _currentCity!.replaceAll(RegExp(r"\s+"), "");
+      _sensors = [];
       _sensors = await _sensorRepository.fetchSensors(_cityNameTrim, pollutant, date);
     } catch (e) {
       debugPrint("Error fetching sensors: $e");
@@ -202,10 +206,11 @@ class MapViewModel extends ChangeNotifier {
 
     HomeWidget.saveWidgetData<String>('pollutionText', TextByAvgValue.get().split('.').first.trim());
 
-    final color = ColorByValue.get(avg);
-    final colorHex = '#${color.value.toRadixString(16).padLeft(8, '0').substring(2)}';
+    Color color = ColorByValue.get(avg);
+    final colorHex = '#${(color.withOpacity(0.8).value).toRadixString(16).padLeft(8, '0')}';
     HomeWidget.saveWidgetData<String>('widgetBackgroundColor', colorHex);
-    HomeWidget.saveWidgetData<String>('averageAQI', avg.toStringAsFixed(0));
+    HomeWidget.saveWidgetData<String>('average', avg.toStringAsFixed(0));
+    HomeWidget.saveWidgetData<String>('measure', changeValueToUnit(Values.valueType));
     HomeWidget.updateWidget(name: 'HomeScreenWidgetProvider', qualifiedAndroidName: 'com.example.clean_breathe.HomeScreenWidgetProvider');
 
     return avg;
@@ -213,6 +218,11 @@ class MapViewModel extends ChangeNotifier {
 
   String pollutantMeasure() {
     return changeValueToUnit(_selectedPollutant);
+  }
+
+  void updateCityByName(String cityName){
+    City city = _cityRepository.getCity(cityName);
+    updateCity(cityName, city.location, city.country);
   }
 
   void updateCity(String cityName, LatLng location, String country) {
@@ -234,7 +244,7 @@ class MapViewModel extends ChangeNotifier {
     var _citySensors = await _sensorRepository.fetchSensors(_cityNameTrim, _selectedPollutant, selectedDate.toString());
 
     if (_citySensors.isEmpty) return "0";
-    var _cityAvg = _citySensors.map((s) => s.value).reduce((a, b) => a + b) / _citySensors.length;
+    double _cityAvg = _citySensors.map((s) => s.value).reduce((a, b) => a + b) / _citySensors.length;
 
     Values.average = _cityAvg;
     return _cityAvg.toString();

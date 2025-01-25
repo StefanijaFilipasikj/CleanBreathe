@@ -3,7 +3,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:clean_breathe/features/city/model/city.dart';
 
 class CityRepository {
-  Future<List<City>> fetchCities(String query) async {
     List<City> cities = [
       City('Skopje', LatLng(41.9981, 21.4254), 'North Macedonia'),
       City('Bitola', LatLng(41.0328, 21.3401), 'North Macedonia'),
@@ -55,6 +54,11 @@ class CityRepository {
       City('Portland', LatLng(45.5152, -122.6784), 'USA')
     ];
 
+  Future<List<City>> fetchCities(String query) async {
     return cities.toList();
+  }
+
+  City getCity(String cityName) {
+    return cities.firstWhere((c) => c.name == cityName);
   }
 }

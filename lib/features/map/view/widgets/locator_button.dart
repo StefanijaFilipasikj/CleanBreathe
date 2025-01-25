@@ -7,7 +7,6 @@ class CenterPositionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Positioned(
       bottom: 55.0,
       right: 10.0,

@@ -85,7 +85,7 @@ class _EditDevicePageState extends State<EditDevicePage> {
                   const Text('Position', style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   SizedBox(
-                    height: 220,
+                    height: 230,
                     child: FlutterMap(
                       mapController: _mapController,
                       options: MapOptions(
@@ -129,6 +129,14 @@ class _EditDevicePageState extends State<EditDevicePage> {
                         Transform.scale(
                           scale: 1.3,
                           child: Checkbox(
+                            side: WidgetStateBorderSide.resolveWith(
+                                  (Set<WidgetState> states) {
+                                if (states.contains(WidgetState.selected)) {
+                                  return const BorderSide(width: 1, color: Colors.green);
+                                }
+                                return const BorderSide(width: 1, color: Colors.black87);
+                              },
+                            ),
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             visualDensity: VisualDensity(horizontal: -4),
                             value: _useCurrentLocation,
@@ -150,20 +158,24 @@ class _EditDevicePageState extends State<EditDevicePage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 25),
                   TextFormField(
                     initialValue: _description,
                     decoration: InputDecoration(
                       labelText: 'Description',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                     onSaved: (value) => _description = value ?? '',
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
                   TextFormField(
                     initialValue: _comment,
                     decoration: InputDecoration(
                       labelText: 'Comment',
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                     onSaved: (value) => _comment = value ?? '',
                   ),
                   const SizedBox(height: 40),

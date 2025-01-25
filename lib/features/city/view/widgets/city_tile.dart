@@ -27,7 +27,7 @@ class CityTile extends StatelessWidget {
     final mapViewModel = Provider.of<MapViewModel>(context);
 
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      contentPadding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 16.0),
       onTap: onTap,
       leading: IconButton(
         icon: Icon(
