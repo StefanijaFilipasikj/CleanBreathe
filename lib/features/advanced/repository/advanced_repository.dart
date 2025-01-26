@@ -2,14 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../common/utils/values.dart';
 import '../model/hourly_average_value.dart';
+import '../../common/static_info/value_type_limits.dart';
 
 class AdvancedRepository {
 
-  Future<List<HourlyAverageValue>> getValueHistory() async {
-
-    final now = DateTime.now();
-    final from = now.subtract(Duration(hours: 24)).toIso8601String().split('T')[0] + "T${now.subtract(Duration(hours: 24)).hour.toString().padLeft(2, '0')}:${now.subtract(Duration(hours: 24)).minute.toString().padLeft(2, '0')}:00%2b01:00";
-    final to = now.toIso8601String().split('T')[0] + "T${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:59%2b01:00";
+  Future<List<HourlyAverageValue>> getValueHistory(DateTime date) async {
+    final from = date.subtract(Duration(hours: 24)).toIso8601String().split('T')[0] + "T${date.subtract(Duration(hours: 24)).hour.toString().padLeft(2, '0')}:${date.subtract(Duration(hours: 24)).minute.toString().padLeft(2, '0')}:00%2b01:00";
+    final to = date.toIso8601String().split('T')[0] + "T${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:59%2b01:00";
 
     String cityName = Values.city;
     String valueType = Values.valueType;
@@ -38,6 +37,14 @@ class AdvancedRepository {
           int hour = entry.key;
           List<HourlyAverageValue> values = entry.value;
           double average = values.map((el) => el.value).reduce((a, b) => a + b) / values.length;
+
+          if (average >= Limits.maxMap[valueType]!){
+            Limits.maxMap[valueType] = (((average + 9) ~/ 10) * 10) + 10; //next larger number divisible by 10 + 10 for padding
+          }
+          else if (average <= Limits.minMap[valueType]!){
+            Limits.minMap[valueType] = ((average ~/ 10) * 10) - 10; //previous smaller number divisible by 10 - 10 for padding
+          }
+
           DateTime hourTimestamp = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, hour);
           hourlyAverages.add(HourlyAverageValue(timestamp: hourTimestamp, value: average));
         }

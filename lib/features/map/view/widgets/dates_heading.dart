@@ -1,3 +1,4 @@
+import 'package:clean_breathe/features/common/utils/values.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../repository/sensor_repository.dart';
@@ -42,9 +43,11 @@ class DatesHeading extends StatelessWidget {
             height: buttonSize,
             child: ElevatedButton(
               onPressed: () async {
+                Values.date = date;
                 if (isExplore) {
                   final pickedDate = await _showStyledDatePicker(context, today);
                   if (pickedDate != null) {
+                    Values.date = pickedDate;
                     onDateSelected(dateFormat.format(pickedDate));
                   }
                 } else if (dateString != null) {

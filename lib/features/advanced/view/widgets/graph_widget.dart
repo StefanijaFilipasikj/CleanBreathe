@@ -1,3 +1,4 @@
+import 'package:clean_breathe/features/common/utils/values.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../repository/advanced_repository.dart';
@@ -23,7 +24,7 @@ class GraphWidget extends StatelessWidget {
 
   Widget _buildGraph() {
     return FutureBuilder<List<HourlyAverageValue>>(
-      future: AdvancedRepository().getValueHistory(),
+      future: AdvancedRepository().getValueHistory(Values.date),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -73,9 +74,12 @@ class GraphWidget extends StatelessWidget {
                       reservedSize: 22,
                       interval: 4,
                       getTitlesWidget: (value, meta) {
-                        final hour = (value.toInt() + now.hour) % 24;
+                        final isToday = Values.date.toString().split(' ')[0] == DateTime.now().toString().split(' ')[0];
+                        final hour = isToday
+                            ? (value.toInt() + DateTime.now().hour) % 24
+                            : value.toInt();
                         final show = value.toInt() != -1;
-                        final isNow = value.toInt() == 24;
+                        final isNow = isToday && value.toInt() == 24;
                         return Padding(
                             padding: const EdgeInsets.only(right: 7.0, top: 4.0),
                             child: show ? Text(
