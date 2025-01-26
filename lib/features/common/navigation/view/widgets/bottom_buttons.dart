@@ -68,7 +68,7 @@ class BottomButtonsState extends State<BottomButtons> {
         }
       },
       {"icon": FontAwesomeIcons.chartLine, "label": "Advanced", "onPressed": widget.advancedInformationCallback},
-      {"icon": FontAwesomeIcons.rankingStar, "label": "Rankings", "onPressed": widget.rankingsCallback},
+      {"icon": "assets/images/rankings_icon.png", "label": "Rankings", "onPressed": widget.rankingsCallback},
     ];
 
     return Container(
@@ -81,6 +81,8 @@ class BottomButtonsState extends State<BottomButtons> {
           Map<String, dynamic> buttonInfo = entry.value;
 
           bool isSelected = _selectedIndex == index;
+          final label = buttonInfo["label"] as String;
+          final icon = label == "Rankings" ? buttonInfo["icon"] as String : buttonInfo["icon"] as IconData;
 
           return GestureDetector(
             onTap: () {
@@ -90,8 +92,15 @@ class BottomButtonsState extends State<BottomButtons> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                label == "Rankings" ?
+                Image.asset(
+                  icon as String,
+                  width: 34,
+                  height: 28,
+                  color: isSelected ? Colors.green : Colors.black,
+                ) :
                 Icon(
-                  buttonInfo["icon"] as IconData,
+                  icon as IconData,
                   color: isSelected ? Colors.green : Colors.black,
                   size: 28,
                 ),
