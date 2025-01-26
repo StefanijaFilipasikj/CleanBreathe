@@ -8,10 +8,10 @@ This project is an air pollution monitoring application inspired by Pulse.eco, l
 
 ### Features:
 **Map Page**
-![map page](https://github.com/user-attachments/assets/732dae11-8561-4ddd-85f0-5bfb143d0830)
+![map page](https://github.com/user-attachments/assets/56cd53cd-5fef-4143-b469-f308dd0a11b2)
 
 **Advanced Information And Rankings**
-![advanced and rankings](https://github.com/user-attachments/assets/7b7313d0-c286-4756-988e-efedc5a3ce08)
+![advanced and rankings](https://github.com/user-attachments/assets/5bdb4d87-3415-4956-aaa7-97bfcb60720d)
 
 **Adding Your Devices**
 ![devices](https://github.com/user-attachments/assets/5a0ffe46-0fb7-4caa-ad6b-626321ee8eb2)
