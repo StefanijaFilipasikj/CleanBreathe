@@ -1,26 +1,23 @@
-# CleanBREATHE
+# Clean Breathe
+This project is an air pollution monitoring application inspired by Pulse.eco, leveraging the Pulse.eco API for real-time environmental data. Built with Flutter, the application follows the Model-View-ViewModel (MVVM) architecture.
 
-Air Pollution App in Flutter inspired by Pulse.eco
+### Made By:  
+> :man_student: **Dejan Simonovski (211039)**  
+> :woman_student: **Stefanija Filipasikj (213215)**  
+> :man_student: **Ivan Cekikj (211146)**
 
-**Authors**: <br />
-Dejan Simonovski (211039) <br />
-Stefanija Filipasikj (213215) <br />
-Ivan Cekikj (211146) <br />
+### Features:
+**Map Page**
+![map page](https://github.com/user-attachments/assets/732dae11-8561-4ddd-85f0-5bfb143d0830)
 
-<p align="center">
-  <img src="https://cdn-icons-png.flaticon.com/512/9308/9308521.png" alt="logo">
-</p>
+**Advanced Information And Rankings**
+![advanced and rankings](https://github.com/user-attachments/assets/7b7313d0-c286-4756-988e-efedc5a3ce08)
 
+**Adding Your Devices**
+![devices](https://github.com/user-attachments/assets/5a0ffe46-0fb7-4caa-ad6b-626321ee8eb2)
 
-## Getting Started
+**Loading Screen & Home Screen Widget**
+![loading and widget](https://github.com/user-attachments/assets/b24d4519-0423-4b2d-986b-247b58884aec)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Figma Prototype**
+![figma](https://github.com/user-attachments/assets/f0a8494f-7d5b-4a17-a65f-85de9aab8589)
